@@ -1,3 +1,5 @@
+# README
+
 I had some custom YNAB reports I wanted, so I wrote some scripts
 that I thought would help. I wanted to publish these to see
 what people thought of them!
