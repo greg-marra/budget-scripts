@@ -3,7 +3,7 @@
     $base_dir = $_SERVER['HOME'];
     require ($base_dir . '/Documents/ynab_vars.php');
     require ($base_dir . '/Documents/ynab/ynab_functions.php');
-    $report_name = "Target Report";
+    $report_name = "Target Rewards Report";
 
     # Get latest date for budget in YNAB and set that in GET for category balances
     $settings = get_settings($ch, $base);

@@ -84,6 +84,21 @@
 
     }
 
-var_dump($yearly_totals);exit;
+#var_dump($yearly_totals);exit;
 
-#    print_totals($yearly_totals, $report_name, $oldest_parsed_date, $recent_parsed_date);
+    $exclude = array(
+        "Cash & Gift Cards",
+        "Bank of America Credit Card",
+    );
+
+    foreach ($yearly_totals as $account_name => $data) {
+
+        if (!in_array($account_name, $exclude)) {
+
+            ksort($data);
+
+            print_totals($data, $account_name, $oldest_parsed_date, $recent_parsed_date);
+
+        }
+
+    }
