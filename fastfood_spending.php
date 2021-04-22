@@ -82,7 +82,7 @@
 
         if ($total["total"] != 0){
 
-            echo $total["name"] . "\n\tMonth: $" . ynab_format($total["month"]) . "\n\tYear: $" . ynab_format($total["year"]) . "\n";
+            echo $total["name"] . "\n\tMonth: $" . ynab_format($total["month"]) . "\n\tYear:  $" . ynab_format($total["year"]) . "\n";
 
         }
 
@@ -92,4 +92,4 @@
     echo "This Month's total: $" . ynab_format($month_total) . "\n";
 
     echo "====";
-    echo "This Year's total: $" . ynab_format($year_total) . "\n\n";
+    echo "This Year's total:  $" . ynab_format($year_total) . "\n\n";
