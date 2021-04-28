@@ -46,6 +46,12 @@
     $TARGET_PAYEE_ID = ""; 
     $TARGET_ACCOUNT_ID = ""; 
 
+    # Investment Contributions Account ID
+    $ETRADE_ACCOUNT_ID = "";
+
+    # Investment Contributions Transfer Payee ID
+    $ETRADE_TRANSFER_PAYEE_ID = "";
+
     # Fastfood Account IDs
     $FASTFOOD_PAYEE_IDS = array(
         
