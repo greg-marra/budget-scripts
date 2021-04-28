@@ -23,7 +23,7 @@ IE I use purple for Camera gear, but it will
 come out of different budgets, so they all
 get "flagged" purple 
 
-# Where to Play THIS directory
+# Where to put THIS directory
 
 Clone this directory into ~/Documents
 
