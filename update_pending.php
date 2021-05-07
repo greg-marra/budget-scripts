@@ -22,13 +22,15 @@
     $transactions_to_update = array();
 
     $transactions = json_decode(curl_exec($ch), true);
+    curl_close($ch);
 
     foreach ($transactions["data"]["transactions"] as $transaction) {
 
         if ($transaction["flag_color"] === $color) {
 
                 array_push($transaction_ids, $transaction["id"]);
-                array_push($transactions_to_update, $transaction);
+                $wrapped = array("transaction" => $transaction);
+                array_push($transactions_to_update, $wrapped);
 
             }
 
@@ -36,15 +38,11 @@
 
     foreach ($transactions_to_update as &$value) {
 
-        $value["date"] = date("Y-m-d");
-        #$data_json = "{\"transaction\": " . json_encode($value);
-#var_dump($data_json);exit;
-        $data_json = "{ \"transaction\": {" .
-            "\"id\":\"" . $value['id'] . "\"," .
-            "\"date\":\"" . $value['date'] . "\"" . 
-            "}";
-        
-        $ch_put = set_curl_put($data_json, $YNAB_TOKEN, $base . $endpoint . "/" . $value["id"]);
+        $value["transaction"]["date"] = date("Y-m-d");
+        $data_json = json_encode($value);
+    
+        $ch_put = set_curl_put($data_json, $YNAB_TOKEN, $base . $endpoint . "/" . $value["transaction"]["id"]);
         $response = put_curl($ch_put);
+        curl_close($ch_put);
 
     }

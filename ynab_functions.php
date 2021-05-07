@@ -38,8 +38,7 @@
     function set_curl_put($data_json, $YNAB_TOKEN, $url) {
 
         $ch_put = curl_init();
-curl_setopt($ch_put, CURLOPT_VERBOSE, true);
-        $base = "https://api.youneedabudget.com/v1/budgets";
+#curl_setopt($ch_put, CURLOPT_VERBOSE, true);
         curl_setopt($ch_put, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch_put, CURLOPT_HTTPHEADER, array(
 
@@ -52,6 +51,7 @@ curl_setopt($ch_put, CURLOPT_VERBOSE, true);
         );
         curl_setopt($ch_put, CURLOPT_URL, $url);
         curl_setopt($ch_put, CURLOPT_CUSTOMREQUEST, 'PUT');
+        #curl_setopt($ch_put, CURLOPT_POSTFIELDS, http_build_query($data_json));
         curl_setopt($ch_put, CURLOPT_POSTFIELDS, $data_json);
 
         return $ch_put;
