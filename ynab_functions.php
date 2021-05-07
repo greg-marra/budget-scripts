@@ -7,7 +7,9 @@
     $base = "https://api.youneedabudget.com/v1/budgets";
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+
         "Authorization: Bearer $YNAB_TOKEN",
+
         )
     );
 
@@ -21,11 +23,55 @@
             echo "API Error:\n";
             echo $settings["error"]["id"] . ": ";
             echo $settings["error"]["name"] . "\n";
+            echo $settings["error"]["detail"] . "\n";
             exit;
 
         } else {
 
             return $settings;
+
+        }
+
+    }
+
+
+    function set_curl_put($data_json, $YNAB_TOKEN, $url) {
+
+        $ch_put = curl_init();
+curl_setopt($ch_put, CURLOPT_VERBOSE, true);
+        $base = "https://api.youneedabudget.com/v1/budgets";
+        curl_setopt($ch_put, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch_put, CURLOPT_HTTPHEADER, array(
+
+            "Authorization: Bearer $YNAB_TOKEN",
+            "Content-Type: application/json",
+#            "Content-Length: " . strlen($data_json)
+
+            )
+
+        );
+        curl_setopt($ch_put, CURLOPT_URL, $url);
+        curl_setopt($ch_put, CURLOPT_CUSTOMREQUEST, 'PUT');
+        curl_setopt($ch_put, CURLOPT_POSTFIELDS, $data_json);
+
+        return $ch_put;
+
+    }
+
+    function put_curl($ch) {
+
+        $response = json_decode(curl_exec($ch), true);
+
+        if (array_key_exists("error", $response)) {
+
+            echo "API Error:\n";
+            echo $response["error"]["id"] . ": ";
+            echo $response["error"]["name"] . "\n";
+            echo $response["error"]["detail"] . "\n";
+
+        } else {
+
+            return $response;
 
         }
 
