@@ -4,6 +4,7 @@
 
     # Initialize curl
     $ch = curl_init();
+#curl_setopt($ch_put, CURLOPT_VERBOSE, true);
     $base = "https://api.youneedabudget.com/v1/budgets";
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_HTTPHEADER, array(
