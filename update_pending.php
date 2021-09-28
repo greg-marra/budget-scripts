@@ -2,7 +2,7 @@
 
     $base_dir = $_SERVER['HOME'];
     require ($base_dir . '/Documents/ynab_vars.php');
-    require ($base_dir . '/Documents/ynab/ynab_functions.php');
+    require ($base_dir . $functions_directory);
 
     # Imports Name and Colors of each flag
     require ($base_dir . '/Documents/ynab_flags.php');

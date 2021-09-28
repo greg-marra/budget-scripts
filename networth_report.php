@@ -2,7 +2,7 @@
 
     $base_dir = $_SERVER['HOME'];
     require ($base_dir . '/Documents/ynab_vars.php');
-    require ($base_dir . '/Documents/ynab/ynab_functions.php');
+    require ($base_dir . $functions_directory);
     $report_name = "Networth Report";
 
     # Get latest date for budget in YNAB and set that in GET for category balances
