@@ -3,6 +3,9 @@
     # API Token
     $YNAB_TOKEN = '';
 
+    # YNAB requires directory to import ynab_functions (makes changing the filename/path easier)
+    $functions_directory = "";
+
     # sets php Date formating to pull in YNABs date
     $YNAB_DATE_FORMAT = 'Y-m-d';
 
