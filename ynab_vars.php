@@ -3,6 +3,9 @@
     # API Token
     $YNAB_TOKEN = '';
 
+    # FSA Category ID
+    $fsa_id = "";
+
     # YNAB requires directory to import ynab_functions (makes changing the filename/path easier)
     $functions_directory = "";
 
