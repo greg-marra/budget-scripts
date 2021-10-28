@@ -86,6 +86,7 @@
         $recent_month = date('n', $recent_parsed_date);
 
         $diff = (($recent_year - $oldest_year) * 12) + ($recent_month - $oldest_month);
+        $diff = ($diff == 0) ? 1 : $diff;
 
         return $diff;
 

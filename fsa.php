@@ -38,7 +38,7 @@
 
             file_put_contents(
                 "$base_dir/Documents/fsa-$year.csv",
-                "$year-$month-$day,$payee,$amount,$notes",
+                "$year-$month-$day,$payee,$amount,$notes\n",
                 FILE_APPEND | LOCK_EX
             );
 
