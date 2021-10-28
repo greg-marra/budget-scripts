@@ -7,9 +7,9 @@
 
     # Get latest date for budget in YNAB and set that in GET for category balances
     $settings = get_settings($ch, $base);
-    $oldest_parsed_date = get_oldest_date($settings);
-    $recent_parsed_date = get_recent_date($settings);
-    $date = date($YNAB_DATE_FORMAT, $recent_parsed_date);
+    $oldest_ynab_date = get_oldest_date($settings);
+    $newest_ynab_date = get_recent_date($settings);
+    $date = date($YNAB_DATE_FORMAT, $newest_ynab_date);
 
     # Endpoint to grab list of category
     $endpoint = "/$BUDGET_ID/accounts/";
@@ -62,12 +62,12 @@
 
     ksort($account_balances);
 
-    print_totals($account_balances, $report_name, $oldest_parsed_date, $recent_parsed_date);
+    print_totals($account_balances, $report_name, $oldest_ynab_date, $newest_ynab_date);
 
 
     $combined = $contributions + $interest_total;
     $percent_of_account_interest = 100 * $interest_total / $combined;
-    $total_months = number_of_months($oldest_parsed_date, $recent_parsed_date);
+    $total_months = number_of_months($oldest_ynab_date, $newest_ynab_date);
 
     $percent_earned = 100 * ($combined - $contributions) / ($contributions * ( ($total_months) /12 ));
 
@@ -78,5 +78,3 @@
         #"Percent Earned: " . number_format($percent_earned, 2 , $US_DECIMAL_FORMAT, $US_THOUSANDS_FORMAT) . " %\n";
         "Interest Base: " . number_format($percent_of_account_interest, 2, $US_DECIMAL_FORMAT, $US_THOUSANDS_FORMAT) . " %" . "\n" . 
         "Percent Earned: " . number_format($percent_earned, 2, $US_DECIMAL_FORMAT, $US_THOUSANDS_FORMAT) . " %" . "\n\n";
-
-

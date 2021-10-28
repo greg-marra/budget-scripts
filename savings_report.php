@@ -7,9 +7,9 @@
 
     # Get latest date for budget in YNAB and set that in GET for category balances
     $settings = get_settings($ch, $base);
-    $oldest_parsed_date = get_oldest_date($settings);
-    $recent_parsed_date = get_recent_date($settings);
-    $date = date($YNAB_DATE_FORMAT, $recent_parsed_date);
+    $oldest_ynab_date = get_oldest_date($settings);
+    $newest_ynab_date = get_recent_date($settings);
+    $date = date($YNAB_DATE_FORMAT, $newest_ynab_date);
 
     # Initialize Array to hold Category budgeted Values
     $category_balances = array();
@@ -29,11 +29,12 @@
         curl_setopt($ch, CURLOPT_URL, $base . $endpoint . $id);
         $array = json_decode(curl_exec($ch), true);
         $balance = ($array["data"]["category"]["balance"] / 1000);
+
         $category_balances[$name] = $balance;
 
     }
     
-    print_totals($category_balances, $report_name, $oldest_parsed_date, $recent_parsed_date);
+    print_totals($category_balances, $report_name, $oldest_ynab_date, $newest_ynab_date);
 
     $ynab_total = 0;
 
@@ -51,6 +52,3 @@
         echo "Move $" . ynab_format(abs($difference)) . $direction . "\n\n";
 
     }
-    
-    
-    #echo $ynab_total . " " . $savings_balance;

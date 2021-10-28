@@ -7,8 +7,8 @@
 
     # Get latest date for budget in YNAB and set that in GET for category balances
     $settings = get_settings($ch, $base);
-    $oldest_parsed_date = get_oldest_date($settings);
-    $recent_parsed_date = get_recent_date($settings);
+    $oldest_ynab_date = get_oldest_date($settings);
+    $newest_ynab_date = get_recent_date($settings);
 
     # Endpoint to grab all transactions for 'Credit Card Cash Rewards'
     $endpoint = "/$BUDGET_ID/payees/$REWARDS_PAYEE_ID/transactions";
@@ -97,7 +97,7 @@
 
             ksort($data);
 
-            print_totals($data, $account_name, $oldest_parsed_date, $recent_parsed_date);
+            print_totals($data, $account_name, $oldest_ynab_date, $newest_ynab_date);
 
         }
 

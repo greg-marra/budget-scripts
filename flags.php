@@ -10,8 +10,8 @@
 
     # Get latest date for budget in YNAB and set that in GET for category balances
     $settings = get_settings($ch, $base);
-    $oldest_parsed_date = get_oldest_date($settings);
-    $recent_parsed_date = get_recent_date($settings);
+    $oldest_ynab_date = get_oldest_date($settings);
+    $newest_ynab_date = get_recent_date($settings);
 
     # Endpoint to grab all transactions for 'Credit Card Cash Rewards'
     $endpoint = "/$BUDGET_ID/transactions";
@@ -37,63 +37,33 @@
 
                 $flag_count++;
                 $amount = $transaction["amount"] / 1000;
-            
-                # Spits out date and transaction amounts for logs
-                #echo $transaction["date"] . ": " . $amount . "\n";
                 
-                $year = explode("-", $transaction["date"])[0];
-                $month = explode("-", $transaction["date"])[1];
+                $transaction_year = (int) explode("-", $transaction["date"])[0];
+                $transaction_month = (int) explode("-", $transaction["date"])[1];
 
-                if (array_key_exists($year, $yearly_totals)) {
+                if (array_key_exists($transaction_year, $yearly_totals)) {
                     
-                    $yearly_totals[$year] += $amount;
+                    $yearly_totals[$transaction_year] += $amount;
 
                 } else {
 
-                    $yearly_totals[$year] = $amount;
+                    $yearly_totals[$transaction_year] = $amount;
 
                 }
 
-                if ($oldest_trans_year === null) {
+                $date_array = set_date($oldest_trans_year, $oldest_trans_month, $newest_trans_year, $newest_trans_month, $transaction_year, $transaction_month);
 
-                    $oldest_trans_year = $year;
-                    $oldest_trans_month = $month;
-
-                    $newest_trans_year = $year;
-                    $newest_trans_month = $month;
-
-                }
-
-                if ($oldest_trans_year > $year) {
-
-                    $oldest_trans_year = $year;
-
-                    if ($oldest_trans_month > $month) {
-
-                        $oldest_trans_month = $month;
-
-                    }
-
-                }
-
-                if ($newest_trans_year < $year) {
-
-                    $newest_trans_year = $year;
-
-                    if ($newest_trans_month < $month) {
-
-                        $newest_trans_month = $month;
-
-                    }
-
-                }
+                $oldest_trans_year = ("$date_array[0]");
+                $oldest_trans_month = ("$date_array[1]");
+                $newest_trans_year = ("$date_array[2]");
+                $newest_trans_month = ("$date_array[3]");
 
             }
 
         }
 
-        $oldest_trans_date = strtotime("$oldest_trans_year-$oldest_trans_month-1");
-        $newest_trans_date = strtotime("$newest_trans_year-$newest_trans_month-1");
+        $oldest_trans_date = strtotime("$oldest_trans_year-$oldest_trans_month-01");
+        $newest_trans_date = strtotime("$newest_trans_year-$newest_trans_month-01");
 
         if ( $flag_count == 0)  {
 

@@ -115,14 +115,54 @@
 
     }
 
-    function print_totals($totals, $report_name, $oldest_parsed_date, $recent_parsed_date) {
+    function set_date($oldest_trans_year, $oldest_trans_month, $newest_trans_year, $newest_trans_month, $transaction_year, $transaction_month) {
+
+        if ($oldest_trans_year === null || $oldest_trans_year > $transaction_year) {
+
+            $oldest_trans_year = $transaction_year;
+            $oldest_trans_month = $transaction_month;
+
+        }
+
+        if ($oldest_trans_year == $transaction_year) {
+
+            if ($oldest_trans_month > $transaction_month) {
+
+                $oldest_trans_month = $transaction_month;
+
+            }
+
+        }
+
+        if ($newest_trans_year === null || $newest_trans_year < $transaction_year) {
+
+            $newest_trans_year = $transaction_year;
+            $newest_trans_month = $transaction_month;
+
+        }
+
+        if ($newest_trans_year == $transaction_year) {
+
+            if ($newest_trans_month < $transaction_month) {
+
+                $newest_trans_month = $transaction_month;
+
+            }
+
+        }
+
+        return array($oldest_trans_year, $oldest_trans_month, $newest_trans_year, $newest_trans_month);
+
+    }
+
+    function print_totals($totals, $report_name, $oldest_trans_date, $newest_trans_date) {
 
         global $US_NUMBER_OF_DECIMALS, $US_DECIMAL_FORMAT, $US_THOUSANDS_FORMAT;
         $max_amount_strlen = 0;
         $max_category_strlen = 0;
         $total = 0;
 
-        echo "   " . $report_name . "\n   " . date("F Y", $recent_parsed_date)  . "\n";
+        echo "   " . $report_name . "\n   " . date("F Y", $newest_trans_date)  . "\n";
 
         foreach ($totals as $category_name => $amount) {
 
@@ -159,7 +199,7 @@
 
         }
 
-        $diff = number_of_months($oldest_parsed_date, $recent_parsed_date);
+        $diff = number_of_months($oldest_trans_date, $newest_trans_date);
         $per_month = ynab_format(($total / $diff));
 
         echo "\n";

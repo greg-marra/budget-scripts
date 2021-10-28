@@ -7,11 +7,11 @@
 
     # Get latest date for budget in YNAB and set that in GET for category balances
     $settings = get_settings($ch, $base);
-    $oldest_parsed_date = get_oldest_date($settings);
-    $recent_parsed_date = get_recent_date($settings);
+    $oldest_ynab_date = get_oldest_date($settings);
+    $newest_ynab_date = get_recent_date($settings);
 
-    $this_month = (float) date('m', $recent_parsed_date);
-    $this_year = (float) date('Y', $recent_parsed_date);
+    $this_month = (float) date('m', $newest_ynab_date);
+    $this_year = (float) date('Y', $newest_ynab_date);
     $last_year = $this_year - 1;
 
     $years = array($this_year, $last_year);
@@ -73,7 +73,7 @@
     $counter = 0;
     ksort($totals);
 
-    echo "   " . "Savings by Month\n   " . date("F Y", $recent_parsed_date)  . "\n";
+    echo "   " . "Savings by Month\n   " . date("F Y", $newest_ynab_date)  . "\n";
 
     foreach($totals as $month => $monthly_balance) {
 
