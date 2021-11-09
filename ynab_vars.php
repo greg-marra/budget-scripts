@@ -6,7 +6,7 @@
     # FSA Category ID
     $fsa_id = "";
 
-    # YNAB requires directory to import ynab_functions (makes changing the filename/path easier)
+    # The directory, in the user's home directory, that ynab_functions.php is in. Include the leading /
     $functions_directory = "";
 
     # sets php Date formating to pull in YNABs date
