@@ -213,3 +213,60 @@
         echo "\n";
 
     }
+
+    function print_number_totals($totals, $report_name, $oldest_trans_date, $newest_trans_date) {
+
+        global $US_NUMBER_OF_DECIMALS, $US_DECIMAL_FORMAT, $US_THOUSANDS_FORMAT;
+        $max_amount_strlen = 0;
+        $max_category_strlen = 0;
+        $total = 0;
+
+        echo "   " . $report_name . "\n   " . date("F Y", $newest_trans_date)  . "\n";
+
+        foreach ($totals as $category_name => $amount) {
+
+            $amount_formatted = $amount;
+
+            echo $category_name . ":" . "\t" . $amount_formatted . "\n";
+            $total += $amount;
+
+            # Calculation for Max Length String of Amount
+            $amount_strlen = strlen($amount_formatted);
+            ($amount_strlen > $max_amount_strlen) ? $max_amount_strlen = $amount_strlen : $amount_strlen = $amount_strlen;
+
+            # Calculation for Max Length String for Category
+            $category_strlen = strlen($category_name);
+            ($category_strlen > $max_category_strlen) ? $max_category_strlen = $category_strlen : $category_strlen = $category_strlen;
+
+        }
+
+        for ($i = 0; $i <= $category_strlen; $i++) {
+
+            echo "=";
+
+        }
+
+        echo "\t";
+
+        (float) $total_formatted = $total;
+
+        (strlen($total_formatted) > $max_amount_strlen) ? $max_amount_strlen = strlen($total_formatted) : $max_amount_strlen = $max_amount_strlen; 
+
+        for ($i = 0; $i <= $max_amount_strlen; $i++) {
+            
+            echo "=";
+
+        }
+
+        $diff = number_of_months($oldest_trans_date, $newest_trans_date);
+        $per_month = ynab_format(($total / $diff));
+
+        echo "\n";
+        echo "TOTAL:" . "\t" . $total_formatted . "\n";
+        
+        echo "# of Months: " . $diff . "\n";
+        echo "Per Month: "  . $per_month . "\n";
+        
+        echo "\n";
+
+    }

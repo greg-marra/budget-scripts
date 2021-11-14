@@ -13,7 +13,7 @@
     $oldest_ynab_date = get_oldest_date($settings);
     $newest_ynab_date = get_recent_date($settings);
 
-    # Endpoint to grab all transactions for 'Credit Card Cash Rewards'
+    # Endpoint to grab all transactions
     $endpoint = "/$BUDGET_ID/transactions";
     curl_setopt($ch, CURLOPT_URL, $base . $endpoint);
 
