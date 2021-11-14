@@ -1,15 +1,15 @@
 <?php
 
     $base_dir = $_SERVER['HOME'];
-    require ($base_dir . '/Documents/ynab_vars.php');
+    require ($base_dir . '/Documents/budget_vars.php');
     require ($base_dir . $functions_directory);
     $report_name = "Retirement Report";
 
-    # Get latest date for budget in YNAB and set that in GET for category balances
+    # Get latest date for budget in budget and set that in GET for category balances
     $settings = get_settings($ch, $base);
-    $oldest_ynab_date = get_oldest_date($settings);
-    $newest_ynab_date = get_recent_date($settings);
-    $date = date($YNAB_DATE_FORMAT, $newest_ynab_date);
+    $oldest_budget_date = get_oldest_date($settings);
+    $newest_budget_date = get_recent_date($settings);
+    $date = date($budget_DATE_FORMAT, $newest_budget_date);
 
     # Endpoint to grab list of category
     $endpoint = "/$BUDGET_ID/accounts/";
@@ -62,19 +62,19 @@
 
     ksort($account_balances);
 
-    print_totals($account_balances, $report_name, $oldest_ynab_date, $newest_ynab_date);
+    print_totals($account_balances, $report_name, $oldest_budget_date, $newest_budget_date);
 
 
     $combined = $contributions + $interest_total;
     $percent_of_account_interest = 100 * $interest_total / $combined;
-    $total_months = number_of_months($oldest_ynab_date, $newest_ynab_date);
+    $total_months = number_of_months($oldest_budget_date, $newest_budget_date);
 
     $percent_earned = 100 * ($combined - $contributions) / ($contributions * ( ($total_months) /12 ));
 
     echo
-        "Contributions: $" . ynab_format($contributions) . "\n" . 
-        "Interest: $" . ynab_format($interest_total) . "\n" . 
-        "Total: $" . ynab_format($combined) . "\n" .
+        "Contributions: $" . budget_format($contributions) . "\n" . 
+        "Interest: $" . budget_format($interest_total) . "\n" . 
+        "Total: $" . budget_format($combined) . "\n" .
         #"Percent Earned: " . number_format($percent_earned, 2 , $US_DECIMAL_FORMAT, $US_THOUSANDS_FORMAT) . " %\n";
         "Interest Base: " . number_format($percent_of_account_interest, 2, $US_DECIMAL_FORMAT, $US_THOUSANDS_FORMAT) . " %" . "\n" . 
         "Percent Earned: " . number_format($percent_earned, 2, $US_DECIMAL_FORMAT, $US_THOUSANDS_FORMAT) . " %" . "\n\n";

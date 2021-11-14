@@ -1,19 +1,19 @@
 # README
 
-I had some custom YNAB reports I wanted, so I wrote some scripts
+I had some custom budget reports I wanted, so I wrote some scripts
 that I thought would help. I wanted to publish these to see
 what people thought of them!
 
 This Repo uses PHP 8.0.*
 
-# ynab_vars.php File
+# budget_vars.php File
 
-Place ynab_vars.php in ~/Documents
+Place budget_vars.php in ~/Documents
 Insert appropiate keys and variables into this file
 
-# ynab_flags.php File
+# budget_flags.php File
 
-This is used, if you use flags in YNAB
+This is used, if you use flags in budget
 Copy the file to ~/Documents
 And name each color flag the appropiate name
 
@@ -27,6 +27,6 @@ get "flagged" purple
 
 Clone this directory into ~/Documents
 
-# Getting Token/IDs from YNAB API
+# Getting Token/IDs from budget API
 
 Under "Quick Start" at https://api.youneedabudget.com

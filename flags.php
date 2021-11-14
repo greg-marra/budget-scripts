@@ -1,17 +1,17 @@
 <?php
 
     $base_dir = $_SERVER['HOME'];
-    require ($base_dir . '/Documents/ynab_vars.php');
+    require ($base_dir . '/Documents/budget_vars.php');
     require ($base_dir . $functions_directory);
 
     # Imports Name and Colors of each flag
-    require ($base_dir . '/Documents/ynab_flags.php');
+    require ($base_dir . '/Documents/budget_flags.php');
     $report_name = "Flagged Report";
 
-    # Get latest date for budget in YNAB and set that in GET for category balances
+    # Get latest date for budget in budget and set that in GET for category balances
     $settings = get_settings($ch, $base);
-    $oldest_ynab_date = get_oldest_date($settings);
-    $newest_ynab_date = get_recent_date($settings);
+    $oldest_budget_date = get_oldest_date($settings);
+    $newest_budget_date = get_recent_date($settings);
 
     # Endpoint to grab all transactions
     $endpoint = "/$BUDGET_ID/transactions";

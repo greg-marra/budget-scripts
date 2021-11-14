@@ -1,15 +1,15 @@
 <?php
     
     $base_dir = $_SERVER['HOME'];
-    require ($base_dir . '/Documents/ynab_vars.php');
+    require ($base_dir . '/Documents/budget_vars.php');
     require ($base_dir . $functions_directory);
     $report_name = "Savings Report";
 
-    # Get latest date for budget in YNAB and set that in GET for category balances
+    # Get latest date for budget in budget and set that in GET for category balances
     $settings = get_settings($ch, $base);
-    $oldest_ynab_date = get_oldest_date($settings);
-    $newest_ynab_date = get_recent_date($settings);
-    $date = date($YNAB_DATE_FORMAT, $newest_ynab_date);
+    $oldest_budget_date = get_oldest_date($settings);
+    $newest_budget_date = get_recent_date($settings);
+    $date = date($budget_DATE_FORMAT, $newest_budget_date);
 
     # Initialize Array to hold Category budgeted Values
     $category_balances = array();
@@ -34,21 +34,21 @@
 
     }
     
-    print_totals($category_balances, $report_name, $oldest_ynab_date, $newest_ynab_date);
+    print_totals($category_balances, $report_name, $oldest_budget_date, $newest_budget_date);
 
-    $ynab_total = 0;
+    $budget_total = 0;
 
     foreach($category_balances as $category => $balance) {
 
-        $ynab_total += $balance;
+        $budget_total += $balance;
     
     }
 
-    $difference = $ynab_total - $savings_balance;
-    $direction = $ynab_total > $savings_balance ? " to savings." : " to checking";
+    $difference = $budget_total - $savings_balance;
+    $direction = $budget_total > $savings_balance ? " to savings." : " to checking";
     
     if ($difference != 0) {
         
-        echo "Move $" . ynab_format(abs($difference)) . $direction . "\n\n";
+        echo "Move $" . budget_format(abs($difference)) . $direction . "\n\n";
 
     }

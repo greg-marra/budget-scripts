@@ -1,17 +1,17 @@
 <?php
 
     $base_dir = $_SERVER['HOME'];
-    require ($base_dir . '/Documents/ynab_vars.php');
+    require ($base_dir . '/Documents/budget_vars.php');
     require ($base_dir . $functions_directory);
     $report_name = "Savings By Month";
 
-    # Get latest date for budget in YNAB and set that in GET for category balances
+    # Get latest date for budget in budget and set that in GET for category balances
     $settings = get_settings($ch, $base);
-    $oldest_ynab_date = get_oldest_date($settings);
-    $newest_ynab_date = get_recent_date($settings);
+    $oldest_budget_date = get_oldest_date($settings);
+    $newest_budget_date = get_recent_date($settings);
 
-    $this_month = (float) date('m', $newest_ynab_date);
-    $this_year = (float) date('Y', $newest_ynab_date);
+    $this_month = (float) date('m', $newest_budget_date);
+    $this_year = (float) date('Y', $newest_budget_date);
     $last_year = $this_year - 1;
 
     $years = array($this_year, $last_year);
@@ -73,7 +73,7 @@
     $counter = 0;
     ksort($totals);
 
-    echo "   " . "Savings by Month\n   " . date("F Y", $newest_ynab_date)  . "\n";
+    echo "   " . "Savings by Month\n   " . date("F Y", $newest_budget_date)  . "\n";
 
     foreach($totals as $month => $monthly_balance) {
 
@@ -86,7 +86,7 @@
         } else {
 
             $delta = $monthly_balance - $previous_balance;
-            $delta_formatted = ynab_format($delta);
+            $delta_formatted = budget_format($delta);
 
             echo $month . ":   $" . $delta_formatted . "\n";
 
@@ -122,7 +122,7 @@
 
     echo "\n";
 
-    echo "TOTAL:" . "\t" .  "$" . ynab_format($total) . "\n";
+    echo "TOTAL:" . "\t" .  "$" . budget_format($total) . "\n";
     echo "Number of months: " . sizeof($totals) . "\n";
-    echo "Per month: " . "$" . ynab_format(($total / sizeof($totals))) . "\n";
+    echo "Per month: " . "$" . budget_format(($total / sizeof($totals))) . "\n";
     echo "\n";

@@ -1,14 +1,14 @@
 <?php
 
     $base_dir = $_SERVER['HOME'];
-    require ($base_dir . '/Documents/ynab_vars.php');
+    require ($base_dir . '/Documents/budget_vars.php');
     require ($base_dir . $functions_directory);
     $report_name = "Networth Report";
 
-    # Get latest date for budget in YNAB and set that in GET for category balances
+    # Get latest date for budget in budget and set that in GET for category balances
     $settings = get_settings($ch, $base);
-    $oldest_ynab_date = get_oldest_date($settings);
-    $newest_ynab_date = get_recent_date($settings);
+    $oldest_budget_date = get_oldest_date($settings);
+    $newest_budget_date = get_recent_date($settings);
 
     # Endpoint to grab list of category
     $endpoint = "/$BUDGET_ID/accounts";
@@ -30,5 +30,5 @@
         
     }
 
-    $yearly_totals[date('Y', $newest_ynab_date)] = $balance;
-    print_totals($yearly_totals, $report_name, $oldest_ynab_date, $newest_ynab_date);
+    $yearly_totals[date('Y', $newest_budget_date)] = $balance;
+    print_totals($yearly_totals, $report_name, $oldest_budget_date, $newest_budget_date);

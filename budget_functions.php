@@ -1,6 +1,6 @@
 <?php
 
-    require ($base_dir . '/Documents/ynab_vars.php');
+    require ($base_dir . '/Documents/budget_vars.php');
 
     # Initialize curl
     $ch = curl_init();
@@ -9,7 +9,7 @@
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_HTTPHEADER, array(
 
-        "Authorization: Bearer $YNAB_TOKEN",
+        "Authorization: Bearer $budget_TOKEN",
 
         )
     );
@@ -36,14 +36,14 @@
     }
 
 
-    function set_curl_put($data_json, $YNAB_TOKEN, $url) {
+    function set_curl_put($data_json, $budget_TOKEN, $url) {
 
         $ch_put = curl_init();
 #curl_setopt($ch_put, CURLOPT_VERBOSE, true);
         curl_setopt($ch_put, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch_put, CURLOPT_HTTPHEADER, array(
 
-            "Authorization: Bearer $YNAB_TOKEN",
+            "Authorization: Bearer $budget_TOKEN",
             "Content-Type: application/json",
 #            "Content-Length: " . strlen($data_json)
 
@@ -108,7 +108,7 @@
 
     }
 
-    function ynab_format($number) {
+    function budget_format($number) {
 
         global $US_NUMBER_OF_DECIMALS, $US_DECIMAL_FORMAT, $US_THOUSANDS_FORMAT;
         return number_format($number, $US_NUMBER_OF_DECIMALS, $US_DECIMAL_FORMAT, $US_THOUSANDS_FORMAT);
@@ -166,7 +166,7 @@
 
         foreach ($totals as $category_name => $amount) {
 
-            $amount_formatted = ynab_format($amount);
+            $amount_formatted = budget_format($amount);
 
             echo $category_name . ":" . "\t" . "$" . $amount_formatted . "\n";
             $total += $amount;
@@ -189,7 +189,7 @@
 
         echo "\t";
 
-        (float) $total_formatted = ynab_format($total);
+        (float) $total_formatted = budget_format($total);
 
         (strlen($total_formatted) > $max_amount_strlen) ? $max_amount_strlen = strlen($total_formatted) : $max_amount_strlen = $max_amount_strlen; 
 
@@ -200,7 +200,7 @@
         }
 
         $diff = number_of_months($oldest_trans_date, $newest_trans_date);
-        $per_month = ynab_format(($total / $diff));
+        $per_month = budget_format(($total / $diff));
 
         echo "\n";
         echo "TOTAL:" . "\t" . "$" . $total_formatted . "\n";
@@ -259,7 +259,7 @@
         }
 
         $diff = number_of_months($oldest_trans_date, $newest_trans_date);
-        $per_month = ynab_format(($total / $diff));
+        $per_month = budget_format(($total / $diff));
 
         echo "\n";
         echo "TOTAL:" . "\t" . $total_formatted . "\n";

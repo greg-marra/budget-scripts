@@ -1,14 +1,14 @@
 <?php
 
     $base_dir = $_SERVER['HOME'];
-    require ($base_dir . '/Documents/ynab_vars.php');
+    require ($base_dir . '/Documents/budget_vars.php');
     require ($base_dir . $functions_directory);
     $report_name = "Fastfood By Month";
 
-    # Get latest date for budget in YNAB and set that in GET for category balances
+    # Get latest date for budget in budget and set that in GET for category balances
     $settings = get_settings($ch, $base);
-    $oldest_ynab_date = get_oldest_date($settings);
-    $newest_ynab_date = get_recent_date($settings);
+    $oldest_budget_date = get_oldest_date($settings);
+    $newest_budget_date = get_recent_date($settings);
     
     $this_month = date('n');
     $this_year = date('Y');
@@ -82,14 +82,14 @@
 
         if ($total["total"] != 0){
 
-            echo $total["name"] . "\n\tMonth: $" . ynab_format($total["month"]) . "\n\tYear:  $" . ynab_format($total["year"]) . "\n";
+            echo $total["name"] . "\n\tMonth: $" . budget_format($total["month"]) . "\n\tYear:  $" . budget_format($total["year"]) . "\n";
 
         }
 
     }
 
     echo "====";
-    echo "This Month's total: $" . ynab_format($month_total) . "\n";
+    echo "This Month's total: $" . budget_format($month_total) . "\n";
 
     echo "====";
-    echo "This Year's total:  $" . ynab_format($year_total) . "\n\n";
+    echo "This Year's total:  $" . budget_format($year_total) . "\n\n";

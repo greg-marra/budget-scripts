@@ -1,17 +1,17 @@
 <?php
 
     $base_dir = $_SERVER['HOME'];
-    require ($base_dir . '/Documents/ynab_vars.php');
+    require ($base_dir . '/Documents/budget_vars.php');
     require ($base_dir . $functions_directory);
 
     # Imports Name and Colors of each flag
-    require ($base_dir . '/Documents/ynab_flags.php');
+    require ($base_dir . '/Documents/budget_flags.php');
     $report_name = "Flagged Report";
 
-    # Get latest date for budget in YNAB and set that in GET for category balances
+    # Get latest date for budget in budget and set that in GET for category balances
     $settings = get_settings($ch, $base);
-    $oldest_ynab_date = get_oldest_date($settings);
-    $newest_ynab_date = get_recent_date($settings);
+    $oldest_budget_date = get_oldest_date($settings);
+    $newest_budget_date = get_recent_date($settings);
 
     # Endpoint to grab all transactions for 'Credit Card Cash Rewards'
     $endpoint = "/$BUDGET_ID/transactions";
@@ -41,7 +41,7 @@
         $value["transaction"]["date"] = date("Y-m-d");
         $data_json = json_encode($value);
     
-        $ch_put = set_curl_put($data_json, $YNAB_TOKEN, $base . $endpoint . "/" . $value["transaction"]["id"]);
+        $ch_put = set_curl_put($data_json, $budget_TOKEN, $base . $endpoint . "/" . $value["transaction"]["id"]);
         $response = put_curl($ch_put);
         curl_close($ch_put);
 
