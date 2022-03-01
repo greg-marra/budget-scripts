@@ -4,7 +4,7 @@
 
     # Initialize curl
     $ch = curl_init();
-#curl_setopt($ch_put, CURLOPT_VERBOSE, true);
+#curl_setopt($ch, CURLOPT_VERBOSE, true);
     $base = "https://api.youneedabudget.com/v1/budgets";
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_HTTPHEADER, array(
@@ -18,7 +18,7 @@
 
         curl_setopt($ch, CURLOPT_URL, $base);
         $settings = json_decode(curl_exec($ch), true);
-
+        
         if (array_key_exists("error", $settings)) {
 
             echo "API Error:\n";
