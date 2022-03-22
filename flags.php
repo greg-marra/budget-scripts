@@ -4,10 +4,6 @@
     require ($base_dir . '/Documents/budget_vars.php');
     require ($base_dir . $functions_directory);
 
-    # Imports Name and Colors of each flag
-    require ($base_dir . '/Documents/budget_flags.php');
-    $report_name = "Flagged Report";
-
     # Get latest date for budget in budget and set that in GET for category balances
     $settings = get_settings($ch, $base);
     $oldest_budget_date = get_oldest_date($settings);
