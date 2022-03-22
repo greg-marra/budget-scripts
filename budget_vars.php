@@ -6,6 +6,12 @@
     # FSA Category ID
     $fsa_id = "";
 
+    # Wage Payee ID's
+    $wage_ids = array(
+
+
+    );
+
     # The directory, in the user's home directory, that budget_functions.php is in. Include the leading /
     $functions_directory = "";
 
@@ -97,5 +103,16 @@
 
         "Name" => "budget_Category_ID",
         "Name" => "budget_Category_ID",
+
+    );
+
+    $flags = array(
+
+        "blue" => "",
+        "orange" => "",
+        "red" => "",
+        "green" => "",
+        "purple" => "",
+        "yellow" => "",
 
     );
