@@ -7,18 +7,16 @@
     # This report to be meaningful
 
     $base_dir = $_SERVER['HOME'];
-    require ($base_dir . '/Documents/budget_vars.php');
+    require ($base_dir . '/Documents/vars-budget.php');
     require ($base_dir . $functions_directory);
-    $report_name = "Interest By Account";
+    $report_name = "Interest By Month";
 
     # Get latest date for budget in budget and set that in GET for category balances
-    $settings = get_settings($ch, $base);
-    $oldest_budget_date = get_oldest_date($settings);
-    $newest_budget_date = get_recent_date($settings);
+    $settings = get_settings($ch, $base ,$budgetID);
+    $oldest_budget_date = get_oldest_date($settings, $budgetID);
+    $newest_budget_date = get_recent_date($settings, $budgetID);
     
-    $budget_year = date('Y', $newest_budget_date);
-    $budget_month = date('m', $newest_budget_date);
-    $budget_month--; 
+    $budget_year = date('Y', $newest_budget_date); 
 
     # Endpoint to grab all transactions for 'Interest Earned/Paid'
     $endpoint = "/$BUDGET_ID/payees/$INTEREST_PAYEE_ID/transactions";
@@ -39,21 +37,18 @@
         $amount = $transaction["amount"] / 1000;
         $transaction_year = (int) explode("-", $transaction["date"])[0];
         $transaction_month = (int) explode("-", $transaction["date"])[1];
-        $transaction_date = $transaction_year . "-" . $transaction_month;
+        $string_month = explode("-", $transaction["date"])[1];
+        $transaction_date = $transaction_year . "-" . $string_month;
 
-        if ( $transaction_year == $budget_year) {
+        if ( true ) {
 
-            if ( $transaction_month == $budget_month) {
+            if (array_key_exists($transaction_date, $totals)) {
+                
+                $totals[$transaction_date] += $amount;
 
-                if (array_key_exists($transaction["account_name"], $totals)) {
-                    
-                    $totals[$transaction["account_name"]] += $amount;
+            } else {
 
-                } else {
-
-                    $totals[$transaction["account_name"]] = $amount;
-
-                }
+                $totals[$transaction_date] = $amount;
 
             }
 

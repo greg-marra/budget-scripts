@@ -1,22 +1,19 @@
 <?php
 
     $base_dir = $_SERVER['HOME'];
-    require ($base_dir . '/Documents/budget_vars.php');
+    require ($base_dir . '/Documents/vars-budget.php');
     require ($base_dir . $functions_directory);
 
-    # Imports Name and Colors of each flag
-    require ($base_dir . '/Documents/budget_flags.php');
-    $report_name = "Flagged Report";
-
     # Get latest date for budget in budget and set that in GET for category balances
-    $settings = get_settings($ch, $base);
-    $oldest_budget_date = get_oldest_date($settings);
-    $newest_budget_date = get_recent_date($settings);
+    $settings = get_settings($ch, $base ,$budgetID);
+    $oldest_budget_date = get_oldest_date($settings, $budgetID);
+    $newest_budget_date = get_recent_date($settings, $budgetID);
 
     # Endpoint to grab all transactions for 'Credit Card Cash Rewards'
     $endpoint = "/$BUDGET_ID/transactions";
     curl_setopt($ch, CURLOPT_URL, $base . $endpoint);
 
+    # Pending flag is orange
     $color = "orange";
     $transaction_ids = array();
     $transactions_to_update = array();

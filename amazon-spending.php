@@ -7,12 +7,12 @@
     # and it can be a black hole for my money
 
     $base_dir = $_SERVER['HOME'];
-    require ($base_dir . '/Documents/budget_vars.php');
+    require ($base_dir . '/Documents/vars-budget.php');
     require ($base_dir . $functions_directory);
     $report_name = "Amazon Report";
 
     # Get latest date for budget in budget and set that in GET for category balances
-    $settings = get_settings($ch, $base);
+    $settings = get_settings($ch, $base ,$budgetID);
 
     # Endpoint to grab all transactions for under Amazon Payee ID
     $endpoint = "/$BUDGET_ID/payees/$AMAZON_PAYEE_ID/transactions";

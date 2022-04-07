@@ -3,6 +3,9 @@
     # API Token
     $budget_TOKEN = '';
 
+    # budgetID of budget you want to work with (required even if you only have 1 budget
+    $budgetID = "";
+
     # FSA Category ID
     $fsa_id = "";
 

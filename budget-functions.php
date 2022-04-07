@@ -1,6 +1,6 @@
 <?php
 
-    require ($base_dir . '/Documents/budget_vars.php');
+    require ($base_dir . '/Documents/vars-budget.php');
 
     # Initialize curl
     $ch = curl_init();
@@ -14,9 +14,9 @@
         )
     );
 
-    function get_settings($ch, $base) {
+    function get_settings($ch, $base, $budgetID) {
 
-        curl_setopt($ch, CURLOPT_URL, $base);
+        curl_setopt($ch, CURLOPT_URL, $base . "?include_accounts=true");# . "/" . $budgetID . "/settings");
         $settings = json_decode(curl_exec($ch), true);
         
         if (array_key_exists("error", $settings)) {
@@ -29,7 +29,21 @@
 
         } else {
 
-            return $settings;
+            foreach ($settings["data"]["budgets"] as $array_index => $array) {
+
+                foreach ($array as $key => $val) {
+
+                    if ($val === $budgetID) {
+
+                        $budget_array_index = $array_index;
+
+                    }
+
+                }
+
+            }
+            
+            return $settings["data"]["budgets"]["$budget_array_index"];
 
         }
 
@@ -92,17 +106,17 @@
 
     }
 
-    function get_oldest_date($settings) {
+    function get_oldest_date($settings, $budgetID) {
 
-        $oldest_date = $settings["data"]["budgets"][0]["first_month"];
+        $oldest_date = $settings["first_month"];
         $oldest_parsed_date = strtotime($oldest_date);
         return $oldest_parsed_date;
 
     }
 
-    function get_recent_date($settings) {
+    function get_recent_date($settings, $budgetID) {
 
-        $recent_date = $settings["data"]["budgets"][0]["last_month"];
+        $recent_date = $settings["last_month"];
         $recent_parsed_date = strtotime($recent_date);
         return $recent_parsed_date;
 
