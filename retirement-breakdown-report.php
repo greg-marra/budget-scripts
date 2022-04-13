@@ -68,13 +68,22 @@
     $combined = $contributions + $interest_total;
     $percent_of_account_interest = 100 * $interest_total / $combined;
     $total_months = number_of_months($oldest_budget_date, $newest_budget_date);
+    $contributions_per_month = $contributions / $total_months;
+    $interest_per_month = $interest_total / $total_months;
 
     $percent_earned = 100 * ($combined - $contributions) / ($contributions * ( ($total_months) /12 ));
 
     echo
+        "Retirement Breakdown:" . "\n" .
+        "\n" .
         "Contributions: $" . budget_format($contributions) . "\n" . 
+        "Contributions Per Month: $" . budget_format($contributions_per_month) . "\n" . 
+        "\n" . 
         "Interest: $" . budget_format($interest_total) . "\n" . 
+        "Interest Per Month: $" . budget_format($interest_per_month) . "\n" .
+        "\n" . 
         "Total: $" . budget_format($combined) . "\n" .
+        "\n" .
         #"Percent Earned: " . number_format($percent_earned, 2 , $US_DECIMAL_FORMAT, $US_THOUSANDS_FORMAT) . " %\n";
         "Interest Base: " . number_format($percent_of_account_interest, 2, $US_DECIMAL_FORMAT, $US_THOUSANDS_FORMAT) . " %" . "\n" . 
-        "Percent Earned: " . number_format($percent_earned, 2, $US_DECIMAL_FORMAT, $US_THOUSANDS_FORMAT) . " %" . "\n\n";
+        "Percent Earned: " . number_format($percent_earned, 2, $US_DECIMAL_FORMAT, $US_THOUSANDS_FORMAT) . " %" . "\n====================\n";
