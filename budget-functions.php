@@ -19,7 +19,7 @@
         curl_setopt($ch, CURLOPT_URL, $base . "?include_accounts=true");# . "/" . $budgetID . "/settings");
         $settings = json_decode(curl_exec($ch), true);
         
-        if (array_key_exists("error", $settings)) {
+        if (is_array($settings) && array_key_exists("error", $settings)) {
 
             echo "API Error:\n";
             echo $settings["error"]["id"] . ": ";
