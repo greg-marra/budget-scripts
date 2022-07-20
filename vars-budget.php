@@ -94,7 +94,7 @@
     # Networth Report
     # Incase you use budget
     # to Track non-financial items
-    $NETWORTH_ACCTS = array(
+    $NON_NETWORTH_ACCTS = array(
 
         "budget_Account_ID", # Note about name of account
         "budget_Account_ID", # These are my PTO hours

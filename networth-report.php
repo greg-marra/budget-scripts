@@ -21,7 +21,7 @@
 
     foreach ($array["data"]["accounts"] as $account) {
 
-        if (!in_array($account["id"], $NETWORTH_ACCTS)) {
+        if (!in_array($account["id"], $NON_NETWORTH_ACCTS)) {
                 
             $balance += ($account["balance"]/1000);
             #echo $account["name"] . " $" . $account["balance"]/1000 . "\n";
