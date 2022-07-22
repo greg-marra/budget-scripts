@@ -90,6 +90,9 @@
 
     );
 
+    # Dining Out Breakout Category ID
+    $DINING_OUT_CATEGORY_ID = "";
+
     # These Accounts are EXCLUDED from
     # Networth Report
     # Incase you use budget
