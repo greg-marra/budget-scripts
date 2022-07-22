@@ -57,9 +57,13 @@
     ksort($totals);
 
     echo "\tDining Out Breakout\n";
+    $report_date = date('F Y', $newest_budget_date);
+    echo "\t$report_date";
 
     foreach($totals as $name => $values) {
         
-        echo $name . "\n\tMonth: $" . budget_format($values["month"]) . "\n\tYear:  $" . budget_format($values["year"]) . "\n";
+        echo "\n\n" . $name . "\n\tMonth: $" . budget_format($values["month"]) . "\n\tYear:  $" . budget_format($values["year"]);
 
     }
+
+    echo "\n";
