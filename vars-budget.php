@@ -93,6 +93,12 @@
     # Dining Out Breakout Category ID
     $DINING_OUT_CATEGORY_ID = "";
 
+    # Clothing Category ID
+    $CLOTHING_CATTEGORY_ID = "";
+
+    # Category Breakdown Category IDs
+    $cat_ids = array();
+
     # These Accounts are EXCLUDED from
     # Networth Report
     # Incase you use budget
