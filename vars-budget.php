@@ -90,6 +90,10 @@
 
     );
 
+
+    # Split Transaction Category ID
+    $SPLIT_CATEGORY_ID = "";
+
     # Dining Out Breakout Category ID
     $DINING_OUT_CATEGORY_ID = "";
 
@@ -97,7 +101,11 @@
     $CLOTHING_CATTEGORY_ID = "";
 
     # Category Breakdown Category IDs
-    $cat_ids = array();
+    $BREAKDOWN_CATEGORY_IDS = array(
+
+        "Category name" => "Category ID",
+
+    );
 
     # These Accounts are EXCLUDED from
     # Networth Report
