@@ -86,4 +86,4 @@
         "\n" .
         #"Percent Earned: " . number_format($percent_earned, 2 , $US_DECIMAL_FORMAT, $US_THOUSANDS_FORMAT) . " %\n";
         "Interest Base: " . number_format($percent_of_account_interest, 2, $US_DECIMAL_FORMAT, $US_THOUSANDS_FORMAT) . " %" . "\n" . 
-        "Percent Earned: " . number_format($percent_earned, 2, $US_DECIMAL_FORMAT, $US_THOUSANDS_FORMAT) . " %" . "\n====================\n";
+        "Percent Earned: " . number_format($percent_earned, 2, $US_DECIMAL_FORMAT, $US_THOUSANDS_FORMAT) . " %" . "\n====================\n\n";
