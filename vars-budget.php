@@ -136,3 +136,11 @@
         "yellow" => "",
 
     );
+
+    $lastweek = array (
+
+    );
+
+    $lastweekflags = (
+
+    );

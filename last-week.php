@@ -31,7 +31,15 @@
 
         $transaction_date = strtotime($transaction['date']);
 
-        if ( $transaction_date >= $day7 && $amount < 0 && $transaction["transfer_account_id"] == null ) {
+        if ( 
+
+            $transaction_date >= $day7 && 
+            $amount < 0 &&
+            $transaction["transfer_account_id"] == null && 
+            in_array($transaction["account_id"], $lastweek) &&
+            !in_array($transaction["flag_color"], $lastweekflags)
+
+        ) {
 
             echo date('D', $transaction_date) . " - $" . 
             str_pad(substr(-$amount, 0, 7), 7) . 
@@ -43,5 +51,3 @@
         } 
 
     }
-
-    #print_totals();
