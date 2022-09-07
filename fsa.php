@@ -14,7 +14,7 @@
     $this_year = date('Y');
     $last_year = $this_year - 1;
 
-    $filtered_year = 2021;
+    $filtered_year = 2022;
 
     $totals = array();
 
@@ -45,3 +45,5 @@
         }
 
     }
+
+    echo "File at: " . "$base_dir/Documents/fsa-$year.csv" . "\n";
