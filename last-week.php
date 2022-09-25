@@ -51,7 +51,21 @@
             " -\t" . str_pad(substr($transaction["category_name"], 0, $sub), $pad) . 
             " -\t" . str_pad(substr($transaction["memo"], 0, $sub), $pad) . 
             "\n";
-        
+
+            $csv_string = 
+                date("m/d/Y", $transaction_date) . "," .
+                -$amount . "," . 
+                $transaction["payee_name"] . "," . 
+                $transaction["category_name"] . "," .
+                $transaction["memo"] . "," .
+                "\n";
+
+            file_put_contents(
+                "$base_dir/Desktop/last_week.csv",
+                $csv_string,
+                FILE_APPEND | LOCK_EX
+            );
+
         } 
 
     }
