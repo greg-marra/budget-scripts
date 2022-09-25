@@ -137,10 +137,14 @@
 
     );
 
-    $lastweek = array (
+    $last_week_accounts = array (
 
     );
 
-    $lastweekflags = (
+    $last_week_flags = array (
+
+    );
+
+    $last_week_categories = array (
 
     );

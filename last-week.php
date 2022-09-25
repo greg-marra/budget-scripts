@@ -5,6 +5,9 @@
     require ($base_dir . $functions_directory);
     $report_name = "Last Week's Transactions";
 
+    $pad = 18;
+    $sub = 12;
+
     # Get latest date for budget in budget and set that in GET for category balances
     $settings = get_settings($ch, $base ,$budgetID);
     $oldest_budget_date = get_oldest_date($settings, $budgetID);
@@ -36,16 +39,17 @@
             $transaction_date >= $day7 && 
             $amount < 0 &&
             $transaction["transfer_account_id"] == null && 
-            in_array($transaction["account_id"], $lastweek) &&
-            !in_array($transaction["flag_color"], $lastweekflags)
+            in_array($transaction["account_id"], $last_week_accounts) &&
+            !in_array($transaction["category_id"], $last_week_categories) &&
+            !in_array($transaction["flag_color"], $last_week_flags)
 
         ) {
 
             echo date('D', $transaction_date) . " - $" . 
             str_pad(substr(-$amount, 0, 7), 7) . 
-            " -\t" . str_pad(substr($transaction["payee_name"], 0, 20), 20) . 
-            " -\t" . str_pad(substr($transaction["category_name"], 0, 20), 20) . 
-            " -\t" . str_pad(substr($transaction["memo"], 0, 20), 20) . 
+            " -\t" . str_pad(substr($transaction["payee_name"], 0, $sub), $pad) . 
+            " -\t" . str_pad(substr($transaction["category_name"], 0, $sub), $pad) . 
+            " -\t" . str_pad(substr($transaction["memo"], 0, $sub), $pad) . 
             "\n";
         
         } 
