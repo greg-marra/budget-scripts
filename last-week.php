@@ -60,11 +60,7 @@
                 $transaction["memo"] . "," .
                 "\n";
 
-            file_put_contents(
-                "$base_dir/Desktop/last_week.csv",
-                $csv_string,
-                FILE_APPEND | LOCK_EX
-            );
+            # file_put_contents("$base_dir/Desktop/last_week.csv",$csv_string,FILE_APPEND | LOCK_EX);
 
         } 
 
