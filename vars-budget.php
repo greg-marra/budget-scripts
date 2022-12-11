@@ -100,6 +100,9 @@
     # Clothing Category ID
     $CLOTHING_CATTEGORY_ID = "";
 
+    # Car Maintenance Category ID
+    $CAR_MAINTENANCE_CATEGORY_ID = "";
+
     # Category Breakdown Category IDs
     $BREAKDOWN_CATEGORY_IDS = array(
 
