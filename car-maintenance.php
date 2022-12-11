@@ -58,28 +58,6 @@
 
     }
 
-/*
-
-    ksort($totals);
-
-    echo "\tCar Maintenance Breakout\n";
-    $report_date = date('F Y', $newest_budget_date);
-    echo "\t$report_date";
-
-    $all = 0;
-
-    foreach($totals as $year => $value) {
-
-        echo "\n\n" . $year . "\n\tYear:  $" . budget_format($value);
-
-        $all += $value;
-
-    }
-
-    echo "$all\n";
-
-*/
-
     $oldest_trans_date = strtotime("$oldest_trans_year-$oldest_trans_month-01");
     $newest_trans_date = strtotime("$newest_trans_year-$newest_trans_month-01");
 
