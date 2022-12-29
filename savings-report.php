@@ -5,6 +5,9 @@
     require ($base_dir . $functions_directory);
     $report_name = "Savings Report";
 
+    # 2 paychecks
+    $CHECKING_FLOOR = 3000;
+
     # Get latest date for budget in budget and set that in GET for category balances
     $settings = get_settings($ch, $base ,$budgetID);
     $oldest_budget_date = get_oldest_date($settings, $budgetID);
@@ -19,6 +22,12 @@
     curl_setopt($ch, CURLOPT_URL, $base . $endpoint);
     $result = json_decode(curl_exec($ch), true);
     $savings_balance = ($result["data"]["account"]["balance"] / 1000);
+
+    # Get Current Checking Account Balance
+    $endpoint = "/$BUDGET_ID/accounts/$CHECKING_ACCOUNT_ID";
+    curl_setopt($ch, CURLOPT_URL, $base . $endpoint);
+    $result = json_decode(curl_exec($ch), true);
+    $checking_balance = ($result["data"]["account"]["balance"] / 1000);
 
     # Endpoint to grab category values
     $endpoint = "/$BUDGET_ID/months/" . $date . "/categories/";
@@ -45,10 +54,25 @@
     }
 
     $difference = $budget_total - $savings_balance;
-    $direction = $budget_total > $savings_balance ? " to savings." : " to checking";
+    $direction = $budget_total > $savings_balance ? -1 : 1;
+    $direction_string = $budget_total > $savings_balance ? " to savings." : " to checking";
+
+    $projected_checkings = ($checking_balance - $direction * $difference);
+    $projected_savings = ($savings_balance + $direction * $difference);
     
-    if ($difference != 0) {
+    if ( $projected_checkings < $CHECKING_FLOOR ) {
+
+        echo "Projected Checkings Balance: $" . budget_format($projected_checkings) . " would be below your minimum\n\n";
+        exit;
+
+    }
+
+    if ( $difference != 0 ) {
+
+        echo
+        "Projected Checkings Balance: $" . budget_format($projected_checkings) . "\n" . 
+        "Projected Savings   Balance: $" . budget_format($projected_savings) . "\n\n" . 
+        "Move $" . budget_format(abs($difference)) . $direction_string . "\n\n";
         
-        echo "Move $" . budget_format(abs($difference)) . $direction . "\n\n";
 
     }
