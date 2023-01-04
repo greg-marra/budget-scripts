@@ -54,12 +54,12 @@
     }
 
     $difference = $budget_total - $savings_balance;
+    $abs_difference = abs($difference);
     $direction = $budget_total > $savings_balance ? -1 : 1;
-    $difference = abs($difference);
     $direction_string = $budget_total > $savings_balance ? " to savings." : " to checking";
 
-    $projected_checkings = ($checking_balance - $direction * $difference);
-    $projected_savings = ($savings_balance + $direction * $difference);
+    $projected_checkings = ($checking_balance - $difference);
+    $projected_savings = ($savings_balance + $difference);
     
     if ( $projected_checkings < $CHECKING_FLOOR ) {
 
@@ -68,12 +68,12 @@
 
     }
 
-    if ( $difference != 0 ) {
+    if ( $abs_difference != 0 ) {
 
         echo
         "Projected Checkings Balance: $" . budget_format($projected_checkings) . "\n" . 
         "Projected Savings   Balance: $" . budget_format($projected_savings) . "\n\n" . 
-        "Move $" . budget_format(abs($difference)) . $direction_string . "\n\n";
+        "Move $" . budget_format($abs_difference) . $direction_string . "\n\n";
         
 
     }
