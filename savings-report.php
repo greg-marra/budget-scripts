@@ -55,6 +55,7 @@
 
     $difference = $budget_total - $savings_balance;
     $direction = $budget_total > $savings_balance ? -1 : 1;
+    $difference = abs($difference);
     $direction_string = $budget_total > $savings_balance ? " to savings." : " to checking";
 
     $projected_checkings = ($checking_balance - $direction * $difference);
