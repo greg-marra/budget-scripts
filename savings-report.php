@@ -17,11 +17,11 @@
     # Initialize Array to hold Category budgeted Values
     $category_balances = array();
 
-    # Get Current Savings Account Balance
+    # Get Current Ally Account Balance
     $endpoint = "/$BUDGET_ID/accounts/$SAVINGS_ACCOUNT_ID";
     curl_setopt($ch, CURLOPT_URL, $base . $endpoint);
     $result = json_decode(curl_exec($ch), true);
-    $savings_balance = ($result["data"]["account"]["balance"] / 1000);
+    $ally_balance = ($result["data"]["account"]["balance"] / 1000);
 
     # Get Current Checking Account Balance
     $endpoint = "/$BUDGET_ID/accounts/$CHECKING_ACCOUNT_ID";
@@ -35,20 +35,31 @@
     $result = json_decode(curl_exec($ch), true);
     $chase_balance = ($result["data"]["account"]["balance"] / 1000);
 
-    # Get Current Checking Account Balance
+    # Get Current Apple Card Account Balance
     $endpoint = "/$BUDGET_ID/accounts/$APPLE_ACCOUNT_ID";
     curl_setopt($ch, CURLOPT_URL, $base . $endpoint);
     $result = json_decode(curl_exec($ch), true);
     $apple_balance = ($result["data"]["account"]["balance"] / 1000);
 
-    # Get Current TargetRCAM Account Balance
+    # Get Current CC Savings Card Account Balance
+    $endpoint = "/$BUDGET_ID/accounts/$CC_SAVINGS_ACCOUNT_ID";
+    curl_setopt($ch, CURLOPT_URL, $base . $endpoint);
+    $result = json_decode(curl_exec($ch), true);
+    $cc_savings_balance = ($result["data"]["account"]["balance"] / 1000);
+
+    # Get Current Target Account Balance
     $endpoint = "/$BUDGET_ID/accounts/$TARGET_ACCOUNT_ID";
     curl_setopt($ch, CURLOPT_URL, $base . $endpoint);
     $result = json_decode(curl_exec($ch), true);
     $target_balance = ($result["data"]["account"]["balance"] / 1000);
 
     # "Net Cash" Calculation
-    $checking_balance = $checking_balance + $target_balance + $apple_balance + $chase_balance;
+    $netcash = $checking_balance + $target_balance + $apple_balance + $chase_balance;
+#    echo "checking: $checking_balance\ntarget: $target_balance\napple: $apple_balance\nchase: $chase_balance\nnetcash: $netcash\n\n\n";
+
+    # Net Savings
+    $savings_balance = $ally_balance + $cc_savings_balance;
+#    echo "savings_balance: $savings_balance\nAlly Balance: $ally_balance\ncc_savings_balance: $cc_savings_balance\n\n";
 
     # Endpoint to grab category values
     $endpoint = "/$BUDGET_ID/months/" . $date . "/categories/";
@@ -76,12 +87,13 @@
 
     $difference = $budget_total - $savings_balance;
     $abs_difference = abs($difference);
-    $direction = $budget_total > $savings_balance ? -1 : 1;
     $direction_string = $budget_total > $savings_balance ? " to savings." : " to checking";
 
-    $projected_checkings = ($checking_balance - $difference);
+    $projected_checkings = ($netcash - $difference);
     $projected_savings = ($savings_balance + $difference);
-    
+
+#    echo "Data Dump:\n====\nCurrent Checking: $checking_balance\nCurrent NetCash: $netcash\nProjected Checkings: $projected_checkings\nProjected Savings: $projected_savings\nYNAB total: $budget_total\nSavings Accts Total: $savings_balance\nDifference: $difference\n\n";
+
     if ( $projected_checkings < $CHECKING_FLOOR ) {
 
         $amt = $CHECKING_FLOOR - $projected_checkings;
@@ -101,4 +113,10 @@
         "Move $" . budget_format($abs_difference) . $direction_string . "\n\n";
         
 
+    }
+
+    if ( $abs_difference == 0 ) { 
+
+        echo "All set.\n\n";
+    
     }
