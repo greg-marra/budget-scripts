@@ -29,6 +29,27 @@
     $result = json_decode(curl_exec($ch), true);
     $checking_balance = ($result["data"]["account"]["balance"] / 1000);
 
+    # Get Current Chase Account Balance
+    $endpoint = "/$BUDGET_ID/accounts/$CHASE_ACCOUNT_ID";
+    curl_setopt($ch, CURLOPT_URL, $base . $endpoint);
+    $result = json_decode(curl_exec($ch), true);
+    $chase_balance = ($result["data"]["account"]["balance"] / 1000);
+
+    # Get Current Checking Account Balance
+    $endpoint = "/$BUDGET_ID/accounts/$APPLE_ACCOUNT_ID";
+    curl_setopt($ch, CURLOPT_URL, $base . $endpoint);
+    $result = json_decode(curl_exec($ch), true);
+    $apple_balance = ($result["data"]["account"]["balance"] / 1000);
+
+    # Get Current TargetRCAM Account Balance
+    $endpoint = "/$BUDGET_ID/accounts/$TARGET_ACCOUNT_ID";
+    curl_setopt($ch, CURLOPT_URL, $base . $endpoint);
+    $result = json_decode(curl_exec($ch), true);
+    $target_balance = ($result["data"]["account"]["balance"] / 1000);
+
+    # "Net Cash" Calculation
+    $checking_balance = $checking_balance + $target_balance + $apple_balance + $chase_balance;
+
     # Endpoint to grab category values
     $endpoint = "/$BUDGET_ID/months/" . $date . "/categories/";
 
@@ -63,7 +84,10 @@
     
     if ( $projected_checkings < $CHECKING_FLOOR ) {
 
-        echo "Projected Checkings Balance: $" . budget_format($projected_checkings) . " would be below your minimum\n\n";
+        $amt = $CHECKING_FLOOR - $projected_checkings;
+
+        echo "Projected NetCash Balance: $" . budget_format($projected_checkings) . "\n\nWould be below your minimum of: $" . budget_format($CHECKING_FLOOR) . "\n\nMove: $" . budget_format($amt) . " to checking\n\n";
+
         exit;
 
     }
@@ -71,8 +95,9 @@
     if ( $abs_difference != 0 ) {
 
         echo
-        "Projected Checkings Balance: $" . budget_format($projected_checkings) . "\n" . 
+        "Current   Savings   Balance: $" . budget_format($savings_balance) . "\n" . 
         "Projected Savings   Balance: $" . budget_format($projected_savings) . "\n\n" . 
+        "Projected NetCash Balance: $" . budget_format($projected_checkings) . "\n\n" . 
         "Move $" . budget_format($abs_difference) . $direction_string . "\n\n";
         
 
