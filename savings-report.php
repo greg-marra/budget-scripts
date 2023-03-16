@@ -75,7 +75,7 @@
 
     }
     
-    print_totals($category_balances, $report_name, $oldest_budget_date, $newest_budget_date);
+    #print_totals($category_balances, $report_name, $oldest_budget_date, $newest_budget_date);
 
     $budget_total = 0;
 
