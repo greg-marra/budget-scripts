@@ -25,6 +25,9 @@
 
     $transactions = json_decode(curl_exec($ch), true);
 
+    $total = 0;
+
+
     foreach ($transactions["data"]["transactions"] as $transaction) {
 
         $amount = $transaction["amount"] / 1000;
@@ -33,12 +36,12 @@
         $transaction_day = (int) explode("-", $transaction["date"])[2];
 
         $transaction_date = strtotime($transaction['date']);
-
+        
         if ( 
 
             $transaction_date >= $day7 && 
-            $amount < 0 &&
-            $transaction["transfer_account_id"] == null && 
+            $transaction["amount"] < 0 &&
+            $transaction["transfer_account_id"] === null && 
             in_array($transaction["account_id"], $last_week_accounts) &&
             !in_array($transaction["category_id"], $last_week_categories) &&
             !in_array($transaction["flag_color"], $last_week_flags)
@@ -52,6 +55,9 @@
             " -\t" . str_pad(substr($transaction["memo"], 0, $sub), $pad) . 
             "\n";
 
+            $total += -$amount;
+
+            $csv_string = NULL;
             $csv_string = 
                 date("m/d/Y", $transaction_date) . "," .
                 -$amount . "," . 
@@ -60,8 +66,17 @@
                 $transaction["memo"] . "," .
                 "\n";
 
-            # file_put_contents("$base_dir/Desktop/last_week.csv",$csv_string,FILE_APPEND | LOCK_EX);
+            #echo $csv_string;
+
+/*
+            file_put_contents(
+                "$base_dir/Desktop/last_week.csv",
+                $csv_string,
+                FILE_APPEND | LOCK_EX);
+ */
 
         } 
 
     }
+
+    echo $amount;
