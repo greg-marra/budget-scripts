@@ -36,6 +36,8 @@
         $transaction_day = (int) explode("-", $transaction["date"])[2];
 
         $transaction_date = strtotime($transaction['date']);
+
+        $transaction["memo"] === null ? $transaction["memo"] = "" : $transaction["memo"] = $transaction["memo"] ;
         
         if ( 
 
@@ -44,7 +46,8 @@
             $transaction["transfer_account_id"] === null && 
             in_array($transaction["account_id"], $last_week_accounts) &&
             !in_array($transaction["category_id"], $last_week_categories) &&
-            !in_array($transaction["flag_color"], $last_week_flags)
+            !in_array($transaction["flag_color"], $last_week_flags) &&
+            $transaction['transfer_account_id'] === null
 
         ) {
 
@@ -79,4 +82,4 @@
 
     }
 
-    echo $amount;
+    echo "\n" . "Total: $" . str_pad(substr($total, 0, 7), 7) . "\n";
