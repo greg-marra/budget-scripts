@@ -3,7 +3,8 @@
     $base_dir = $_SERVER['HOME'];
     require ($base_dir . '/Documents/vars-budget.php');
     require ($base_dir . $functions_directory);
-    $report_name = "Hiking Report";
+    $report_name = "PoGo Report";
+    $flagged_color = "blue";
 
     # Get latest date for budget in budget and set that in GET for category balances
     $settings = get_settings($ch, $base ,$budgetID);
@@ -26,7 +27,7 @@
 
     foreach ($transactions["data"]["transactions"] as $transaction) {
 
-        if ($transaction["flag_color"] == "green") {
+        if ($transaction["flag_color"] == $flagged_color) {
 
             $amount = $transaction["amount"] / 1000;
             $transaction_year = (int) explode("-", $transaction["date"])[0];

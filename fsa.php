@@ -1,5 +1,7 @@
 <?php
 
+    $filtered_year = 2023;
+
     $base_dir = $_SERVER['HOME'];
     require ($base_dir . '/Documents/vars-budget.php');
     require ($base_dir . $functions_directory);
@@ -13,8 +15,6 @@
     $this_month = date('n');
     $this_year = date('Y');
     $last_year = $this_year - 1;
-
-    $filtered_year = 2022;
 
     $totals = array();
     $total = 0;
