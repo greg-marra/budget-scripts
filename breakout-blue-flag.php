@@ -6,6 +6,10 @@
     $report_name = "PoGo Report";
     $flagged_color = "blue";
 
+    $AMOUNT_LENGTH = 6;
+    $PAYEE_LENGTH = 15;
+    $MEMO_LENGTH = 25;
+
     # Get latest date for budget in budget and set that in GET for category balances
     $settings = get_settings($ch, $base ,$budgetID);
     $oldest_budget_date = get_oldest_date($settings, $budgetID);
@@ -29,17 +33,33 @@
 
         if ($transaction["flag_color"] == $flagged_color) {
 
-            $amount = budget_format(-$transaction["amount"] / 1000);
             $transaction_year = (int) explode("-", $transaction["date"])[0];
             $transaction_month = (int) explode("-", $transaction["date"])[1];
 
-            $pad = (strlen($amount) > 4) ? "" : " ";
+            $amount = budget_format(-$transaction["amount"] / 1000);
+            $amount = substr($amount, 0, $AMOUNT_LENGTH);
+            $amount = (strlen($amount) < $AMOUNT_LENGTH ) ? str_pad($amount, $AMOUNT_LENGTH, " ", STR_PAD_RIGHT) : $amount ;
+
+            $payee_name = substr($transaction["payee_name"], 0, $PAYEE_LENGTH);
+            $payee_name = (strlen($payee_name) < $PAYEE_LENGTH ) ? str_pad($payee_name, $PAYEE_LENGTH, " ", STR_PAD_RIGHT) : $payee_name ;
 
             $transaction_date = strtotime($transaction['date']);
 
+            $memo = $transaction["memo"];
+
+            if ( $memo == null) {
+
+                $memo = "";
+
+            }
+
+            $memo = substr($memo, 0, $MEMO_LENGTH);
+            $memo = (strlen($memo) < $MEMO_LENGTH) ? str_pad($memo, $MEMO_LENGTH, " ", STR_PAD_RIGHT) : $memo ;
+
             echo date('Y/m/d', $transaction_date) . " - " .
-            "$" . $amount . $pad ." - " .
-            $transaction["memo"] .
+            "$" . $amount ." - " .
+            $payee_name . " - " .
+            $memo .
             "\n";
 
             $transaction_year= explode("-", $transaction["date"])[0];
@@ -67,5 +87,7 @@
 
     $oldest_trans_date = strtotime("$oldest_trans_year-$oldest_trans_month-01");
     $newest_trans_date = strtotime("$newest_trans_year-$newest_trans_month-01");
+
+    echo "\n\n";
 
     print_totals($yearly_totals, $report_name, $oldest_trans_date, $newest_trans_date);

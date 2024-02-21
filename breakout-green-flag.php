@@ -3,8 +3,8 @@
     $base_dir = $_SERVER['HOME'];
     require ($base_dir . '/Documents/vars-budget.php');
     require ($base_dir . $functions_directory);
-    $report_name = "Achilles Report";
-    $flagged_color = "red";
+    $report_name = "Hiking Report";
+    $flagged_color = "green";
 
     $AMOUNT_LENGTH = 6;
     $PAYEE_LENGTH = 15;
