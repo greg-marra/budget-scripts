@@ -5,9 +5,6 @@
     require ($base_dir . $functions_directory);
     $report_name = "Savings Report";
 
-    # 2 paychecks
-    $CHECKING_FLOOR = 3000;
-
     # Get latest date for budget in budget and set that in GET for category balances
     $settings = get_settings($ch, $base ,$budgetID);
     $oldest_budget_date = get_oldest_date($settings, $budgetID);
@@ -17,70 +14,71 @@
     # Initialize Array to hold Category budgeted Values
     $category_balances = array();
 
-    # Get Current Ally Account Balance
-    $endpoint = "/$BUDGET_ID/accounts/$SAVINGS_ACCOUNT_ID";
-    curl_setopt($ch, CURLOPT_URL, $base . $endpoint);
-    $result = json_decode(curl_exec($ch), true);
-    $ally_balance = ($result["data"]["account"]["balance"] / 1000);
+    $account_ids = array(
 
-    # Get Current Checking Account Balance
-    $endpoint = "/$BUDGET_ID/accounts/$CHECKING_ACCOUNT_ID";
-    curl_setopt($ch, CURLOPT_URL, $base . $endpoint);
-    $result = json_decode(curl_exec($ch), true);
-    $checking_balance = ($result["data"]["account"]["balance"] / 1000);
+        "ally" => $SAVINGS_ACCOUNT_ID,
+        "checking" => $CHECKING_ACCOUNT_ID,
+        "chase" => $CHASE_ACCOUNT_ID,
+        "apple" => $APPLE_ACCOUNT_ID,
+        "verizon" => $VERIZON_ACCOUNT_ID,
+        "cc_savings" => $APPLE_ACCOUNT_ID,
+        "target" => $TARGET_ACCOUNT_ID,
 
-    # Get Current Chase Account Balance
-    $endpoint = "/$BUDGET_ID/accounts/$CHASE_ACCOUNT_ID";
-    curl_setopt($ch, CURLOPT_URL, $base . $endpoint);
-    $result = json_decode(curl_exec($ch), true);
-    $chase_balance = ($result["data"]["account"]["balance"] / 1000);
+    );
 
-    # Get Current Apple Card Account Balance
-    $endpoint = "/$BUDGET_ID/accounts/$APPLE_ACCOUNT_ID";
+    # Get All Account Data
+    $endpoint = "/$BUDGET_ID/accounts";
     curl_setopt($ch, CURLOPT_URL, $base . $endpoint);
-    $result = json_decode(curl_exec($ch), true);
-    $apple_balance = ($result["data"]["account"]["balance"] / 1000);
+    $all_account_data = json_decode(curl_exec($ch), true);
 
-    # Get Current Verizon Card Account Balance
-    $endpoint = "/$BUDGET_ID/accounts/$VZW_ACCOUNT_ID";
-    curl_setopt($ch, CURLOPT_URL, $base . $endpoint);
-    $result = json_decode(curl_exec($ch), true);
-    $vzw_balance = ($result["data"]["account"]["balance"] / 1000);
+    foreach ($account_ids as $name => $id) {
 
-    # Get Current CC Savings Card Account Balance
-    $endpoint = "/$BUDGET_ID/accounts/$CC_SAVINGS_ACCOUNT_ID";
-    curl_setopt($ch, CURLOPT_URL, $base . $endpoint);
-    $result = json_decode(curl_exec($ch), true);
-    $cc_savings_balance = ($result["data"]["account"]["balance"] / 1000);
+        foreach ($all_account_data["data"]["accounts"] as $key => $value) {
 
-    # Get Current Target Account Balance
-    $endpoint = "/$BUDGET_ID/accounts/$TARGET_ACCOUNT_ID";
-    curl_setopt($ch, CURLOPT_URL, $base . $endpoint);
-    $result = json_decode(curl_exec($ch), true);
-    $target_balance = ($result["data"]["account"]["balance"] / 1000);
+            if ($id == $value["id"]) {
+
+                ${$name . "_balance"} = $value["balance"]/1000;
+
+            }
+
+        }
+
+    }
 
     # "Net Cash" Calculation
-    $netcash = $checking_balance + $target_balance + $apple_balance + $chase_balance + $vzw_balance;
+    $netcash = $checking_balance + $target_balance + $apple_balance + $chase_balance + $verizon_balance;
     echo "Net Cash: $" . budget_format($netcash) . "\n\n";
-#    echo "checking: $checking_balance\ntarget: $target_balance\napple: $apple_balance\nchase: $chase_balance\nVerizon: $vzw_balance\nnetcash: $netcash\n\n\n";
+#    echo "checking: $checking_balance\ntarget: $target_balance\napple: $apple_balance\nchase: $chase_balance\nVerizon: $verizon_balance\nnetcash: $netcash\n\n\n";
 
     # Net Savings
     $savings_balance = $ally_balance; // + $cc_savings_balance;
 #    echo "savings_balance: $savings_balance\nAlly Balance: $ally_balance\ncc_savings_balance: $cc_savings_balance\n\n";
 
-    # Endpoint to grab category values
-    $endpoint = "/$BUDGET_ID/months/" . $date . "/categories/";
+    # Endpoint to grab category data
+    $endpoint = "/$BUDGET_ID/categories/";
+    curl_setopt($ch, CURLOPT_URL, $base . $endpoint);
+    $all_category_data = json_decode(curl_exec($ch), true);
 
-    # For loop to get balances by budget, for specified month, store in an array and total and echo while looping
-    foreach ($BALANCE_IDS as $name => $id) {
+    # For loop to get balances of each category and compare to array of selected categories
 
-        curl_setopt($ch, CURLOPT_URL, $base . $endpoint . $id);
-        $array = json_decode(curl_exec($ch), true);
-        $balance = ($array["data"]["category"]["balance"] / 1000);
+    foreach ( $all_category_data["data"]["category_groups"] as $key1 => $group ) {
 
-        $category_balances[$name] = $balance;
+        foreach ( $group["categories"] as $key2 => $category) {
 
-        echo $name . ": $" . budget_format($balance) . "\n";
+            foreach ( $BALANCE_IDS as $name => $id) {
+
+                if ( $id == $category["id"] ) {
+
+                    $balance = $category["balance"]/1000;
+                    echo $name . " : $" . budget_format($balance) . "\n";
+
+                    array_push( $category_balances, array($name => $balance));
+
+                }
+
+            }
+
+        }
 
     }
 
@@ -90,9 +88,13 @@
 
     $budget_total = 0;
 
-    foreach($category_balances as $category => $balance) {
+    foreach( $category_balances as $key4 => $array ) {
 
-        $budget_total += $balance;
+        foreach( $array as $name => $balance ) {
+
+            $budget_total += $balance;
+
+        }
     
     }
 

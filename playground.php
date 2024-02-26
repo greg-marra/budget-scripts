@@ -9,7 +9,7 @@
 
     curl_setopt($ch, CURLOPT_URL, $base . $endpoint);
     $array = json_decode(curl_exec($ch), true);
-    var_dump($array);
+#    var_dump($array);
 
     echo "\n" . $base . $endpoint . "\n";
 
