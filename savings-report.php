@@ -41,6 +41,12 @@
     $result = json_decode(curl_exec($ch), true);
     $apple_balance = ($result["data"]["account"]["balance"] / 1000);
 
+    # Get Current Verizon Card Account Balance
+    $endpoint = "/$BUDGET_ID/accounts/$VZW_ACCOUNT_ID";
+    curl_setopt($ch, CURLOPT_URL, $base . $endpoint);
+    $result = json_decode(curl_exec($ch), true);
+    $vzw_balance = ($result["data"]["account"]["balance"] / 1000);
+
     # Get Current CC Savings Card Account Balance
     $endpoint = "/$BUDGET_ID/accounts/$CC_SAVINGS_ACCOUNT_ID";
     curl_setopt($ch, CURLOPT_URL, $base . $endpoint);
@@ -54,11 +60,12 @@
     $target_balance = ($result["data"]["account"]["balance"] / 1000);
 
     # "Net Cash" Calculation
-    $netcash = $checking_balance + $target_balance + $apple_balance + $chase_balance;
-#    echo "checking: $checking_balance\ntarget: $target_balance\napple: $apple_balance\nchase: $chase_balance\nnetcash: $netcash\n\n\n";
+    $netcash = $checking_balance + $target_balance + $apple_balance + $chase_balance + $vzw_balance;
+    echo "Net Cash: $" . budget_format($netcash) . "\n\n";
+#    echo "checking: $checking_balance\ntarget: $target_balance\napple: $apple_balance\nchase: $chase_balance\nVerizon: $vzw_balance\nnetcash: $netcash\n\n\n";
 
     # Net Savings
-    $savings_balance = $ally_balance + $cc_savings_balance;
+    $savings_balance = $ally_balance; // + $cc_savings_balance;
 #    echo "savings_balance: $savings_balance\nAlly Balance: $ally_balance\ncc_savings_balance: $cc_savings_balance\n\n";
 
     # Endpoint to grab category values
@@ -73,8 +80,12 @@
 
         $category_balances[$name] = $balance;
 
+        echo $name . ": $" . budget_format($balance) . "\n";
+
     }
-    
+
+    echo "==============\n";
+
     #print_totals($category_balances, $report_name, $oldest_budget_date, $newest_budget_date);
 
     $budget_total = 0;
@@ -107,8 +118,8 @@
     if ( $abs_difference != 0 ) {
 
         echo
-        "Current   Savings   Balance: $" . budget_format($savings_balance) . "\n" . 
-        "Projected Savings   Balance: $" . budget_format($projected_savings) . "\n\n" . 
+        "Ally Balance: $" . budget_format($savings_balance) . "\n" . 
+        "Envelope Balance: $" . budget_format($projected_savings) . "\n\n" . 
         "Projected NetCash Balance: $" . budget_format($projected_checkings) . "\n\n" . 
         "Move $" . budget_format($abs_difference) . $direction_string . "\n\n";
         
