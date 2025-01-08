@@ -1,6 +1,6 @@
 <?php
 
-    $filtered_year = 2023;
+    $filtered_year = 2024;
 
     $base_dir = $_SERVER['HOME'];
     require ($base_dir . '/Documents/vars-budget.php');
