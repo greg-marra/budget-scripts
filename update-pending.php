@@ -17,6 +17,7 @@
     $color = "orange";
     $transaction_ids = array();
     $transactions_to_update = array();
+    $count = 0;
 
     $transactions = json_decode(curl_exec($ch), true);
     curl_close($ch);
@@ -25,6 +26,7 @@
 
         if ($transaction["flag_color"] === $color) {
 
+                $count++;
                 array_push($transaction_ids, $transaction["id"]);
                 $wrapped = array("transaction" => $transaction);
                 array_push($transactions_to_update, $wrapped);
@@ -43,3 +45,5 @@
         curl_close($ch_put);
 
     }
+
+    echo "Transactions updated: $count\n\n";
