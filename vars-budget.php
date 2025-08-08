@@ -95,7 +95,7 @@
     $SPLIT_CATEGORY_ID = "";
 
     # Dining Out Breakout Category ID
-    $DINING_OUT_CATEGORY_ID = "";
+    $DINING_OUT_CATEGORY_ID = array();
 
     # Clothing Category ID
     $CLOTHING_CATTEGORY_ID = "";

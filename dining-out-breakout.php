@@ -22,9 +22,9 @@
 
     foreach ( $result["data"]["transactions"] as $transaction) {
 
-        if ( $transaction["category_id"] == $DINING_OUT_CATEGORY_ID) {
+        if ( in_array($transaction["category_id"], $DINING_OUT_CATEGORY_ID) ) {
 
-            $date = date_parse_from_format("Y-m-d",$transaction["date"]);
+            $date = date_parse_from_format("Y-m-d", $transaction["date"]);
             $year = $date["year"];
             $month = $date["month"];
             $amount = number_format(-$transaction["amount"] / 1000, 2, ".", "");
@@ -56,13 +56,37 @@
 
     ksort($totals);
 
+    $monthly_total = 0;
+    $yearly_total = 0;
+
+    foreach($totals as $name => $values) {
+
+        $monthly_total += $values["month"];
+        $yearly_total += $values["year"];
+
+    }
+
     echo "\tDining Out Breakout\n";
     $report_date = date('F Y', $newest_budget_date);
-    echo "\t$report_date";
+    echo "\t$report_date\n";
+
+    echo "\nMonth Total: $" . budget_format($monthly_total) . "\n" . "Year Total: $" . budget_format($yearly_total) . "\n\n";
+
+    file_put_contents(
+        "$base_dir/Desktop/dining-out.csv",
+        "Name,this-month,this-year\n",
+        LOCK_EX
+    );
 
     foreach($totals as $name => $values) {
         
-        echo "\n\n" . $name . "\n\tMonth: $" . budget_format($values["month"]) . "\n\tYear:  $" . budget_format($values["year"]);
+        echo "\n" . $name . "\n\tMonth: $" . budget_format($values["month"]) . "\n\tYear:  $" . budget_format($values["year"]);
+
+        file_put_contents(
+            "$base_dir/Desktop/dining-out.csv",
+            "$name,{$values['month']},{$values['year']}\n",
+            FILE_APPEND | LOCK_EX
+        );
 
     }
 
