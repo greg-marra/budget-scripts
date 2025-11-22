@@ -1,11 +1,11 @@
 <?php
 
-    $filtered_year = 2024;
+    $filtered_year = 2025;
 
     $base_dir = $_SERVER['HOME'];
     require ($base_dir . '/Documents/vars-budget.php');
     require ($base_dir . $functions_directory);
-    $report_name = "FSA.csv";
+    $report_name = "fsa.csv";
 
     # Get latest date for budget in budget and set that in GET for category balances
     $settings = get_settings($ch, $base ,$budgetID);

@@ -20,7 +20,7 @@
     $count = 0;
 
     $transactions = json_decode(curl_exec($ch), true);
-    curl_close($ch);
+    #curl_close($ch);
 
     foreach ($transactions["data"]["transactions"] as $transaction) {
 
@@ -42,7 +42,7 @@
     
         $ch_put = set_curl_put($data_json, $budget_TOKEN, $base . $endpoint . "/" . $value["transaction"]["id"]);
         $response = put_curl($ch_put);
-        curl_close($ch_put);
+        #curl_close($ch_put);
 
     }
 
