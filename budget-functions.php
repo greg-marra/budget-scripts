@@ -284,3 +284,30 @@
         echo "\n";
 
     }
+
+    function interest_analysis ($totals, $total_balance, $report_name) {
+
+        global $US_NUMBER_OF_DECIMALS, $US_DECIMAL_FORMAT, $US_THOUSANDS_FORMAT;
+        $max_amount_strlen = 0;
+        $max_category_strlen = 0;
+        $interest_total = 0;
+
+        foreach ($totals as $category_name => $amount) {
+
+            $amount_formatted = budget_format($amount);
+
+            $interest_total += $amount;
+
+    
+        }
+
+        $contributed = $total_balance - $interest_total;
+        $percent = sprintf("%d%%", (100 * $interest_total/$total_balance));
+
+
+        echo("\n");
+        echo("Contributed: " . budget_format($contributed) . "\n");
+        echo("Interest: " . budget_format($interest_total) . "\n");
+        echo("% Interest: " . $percent . "\n");
+
+    }
