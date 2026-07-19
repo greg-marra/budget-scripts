@@ -12,14 +12,20 @@
     $report_name = "Interest By Month";
 
     # Get latest date for budget in budget and set that in GET for category balances
-    $settings = get_settings($ch, $base ,$budgetID);
-    $oldest_budget_date = get_oldest_date($settings, $budgetID);
-    $newest_budget_date = get_recent_date($settings, $budgetID);
+    $settings = get_settings($ch, $base ,$BUDGET_ID);
+    $oldest_budget_date = get_oldest_date($settings, $BUDGET_ID);
+    $newest_budget_date = get_recent_date($settings, $BUDGET_ID);
     
     $budget_year = date('Y', $newest_budget_date); 
 
     # Endpoint to grab all transactions for 'Interest Earned/Paid'
     $endpoint = "/$BUDGET_ID/payees/$INTEREST_PAYEE_ID/transactions";
+    if (!empty($oldest_budget_date)) {
+        // FIXED: Convert the numeric timestamp integer into a YYYY-MM-DD string for the API
+        $api_since_date = is_numeric($oldest_budget_date) ? date('Y-m-d', $oldest_budget_date) : $oldest_budget_date;
+        $endpoint .= "?since_date=" . urlencode($api_since_date);
+    }
+    curl_setopt($ch, CURLOPT_URL, $base . $endpoint);
 
     curl_setopt($ch, CURLOPT_URL, $base . $endpoint);
     $transactions = json_decode(curl_exec($ch), true);

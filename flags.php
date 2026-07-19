@@ -5,12 +5,22 @@
     require ($base_dir . $functions_directory);
 
     # Get latest date for budget in budget and set that in GET for category balances
-    $settings = get_settings($ch, $base ,$budgetID);
-    $oldest_budget_date = get_oldest_date($settings, $budgetID);
-    $newest_budget_date = get_recent_date($settings, $budgetID);
+    $settings = get_settings($ch, $base, $BUDGET_ID);
+    $oldest_budget_date = get_oldest_date($settings, $BUDGET_ID);
+    $newest_budget_date = get_recent_date($settings, $BUDGET_ID);
 
-    # Endpoint to grab all transactions
+    # 1. Format the date safely first if it's a numeric timestamp
+    if (!empty($oldest_budget_date) && is_numeric($oldest_budget_date)) {
+        $oldest_budget_date = date('Y-m-d', $oldest_budget_date);
+    }
+
+    # 2. Build the endpoint cleanly with a single query parameter to get all history
     $endpoint = "/$BUDGET_ID/transactions";
+    if (!empty($oldest_budget_date)) {
+        $endpoint .= "?since_date=" . urlencode($oldest_budget_date);
+    }
+
+    # 3. Apply the final URL to the cURL handle
     curl_setopt($ch, CURLOPT_URL, $base . $endpoint);
 
     $transactions = json_decode(curl_exec($ch), true);
@@ -61,11 +71,12 @@
         $oldest_trans_date = strtotime("$oldest_trans_year-$oldest_trans_month-01");
         $newest_trans_date = strtotime("$newest_trans_year-$newest_trans_month-01");
 
-        if ( $flag_count == 0)  {
+        if ($flag_count == 0) {
 
             $yearly_totals = array(date('Y') => 0);
 
         }
-            print_totals($yearly_totals, $report_name . " Report", $oldest_trans_date, $newest_trans_date);
+        
+        print_totals($yearly_totals, $report_name . " Report", $oldest_trans_date, $newest_trans_date);
 
     }

@@ -6,9 +6,9 @@
     $report_name = "Savings Report";
 
     # Get latest date for budget in budget and set that in GET for category balances
-    $settings = get_settings($ch, $base ,$budgetID);
-    $oldest_budget_date = get_oldest_date($settings, $budgetID);
-    $newest_budget_date = get_recent_date($settings, $budgetID);
+    $settings = get_settings($ch, $base ,$BUDGET_ID);
+    $oldest_budget_date = get_oldest_date($settings, $BUDGET_ID);
+    $newest_budget_date = get_recent_date($settings, $BUDGET_ID);
     $date = date($budget_DATE_FORMAT, $newest_budget_date);
 
     # Initialize Array to hold Category budgeted Values

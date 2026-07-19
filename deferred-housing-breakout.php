@@ -6,9 +6,9 @@
     $report_name = "deferred.csv";
 
     # Get latest date for budget in budget and set that in GET for category balances
-    $settings = get_settings($ch, $base ,$budgetID);
-    $oldest_budget_date = get_oldest_date($settings, $budgetID);
-    $newest_budget_date = get_recent_date($settings, $budgetID);
+    $settings = get_settings($ch, $base ,$BUDGET_ID);
+    $oldest_budget_date = get_oldest_date($settings, $BUDGET_ID);
+    $newest_budget_date = get_recent_date($settings, $BUDGET_ID);
     
     $this_month = date('n');
     $this_year = date('Y');
@@ -19,6 +19,13 @@
 
     # Endpoint to grab all transactions for each Payee
     $endpoint = "/$BUDGET_ID/transactions";
+
+    if (!empty($oldest_budget_date)) {
+        $api_since_date = is_numeric($oldest_budget_date) ? date('Y-m-d', $oldest_budget_date) : $oldest_budget_date;
+        $endpoint .= "?since_date=" . urlencode($api_since_date);
+
+    }
+
     curl_setopt($ch, CURLOPT_URL, $base . $endpoint);
     $result = json_decode(curl_exec($ch), true);
 

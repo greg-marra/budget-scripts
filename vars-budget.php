@@ -4,7 +4,7 @@
     $budget_TOKEN = '';
 
     # budgetID of budget you want to work with (required even if you only have 1 budget
-    $budgetID = "";
+    $BUDGET_ID = "";
 
     # FSA Category ID
     $fsa_id = "";
