@@ -14,9 +14,9 @@
         )
     );
 
-    function get_settings($ch, $base, $BUDGET_ID) {
+    function get_settings($ch, $base, $budgetID) {
 
-        curl_setopt($ch, CURLOPT_URL, $base . "?include_accounts=true");# . "/" . $BUDGET_ID . "/settings");
+        curl_setopt($ch, CURLOPT_URL, $base . "?include_accounts=true");# . "/" . $budgetID . "/settings");
         $settings = json_decode(curl_exec($ch), true);
         
         if (is_array($settings) && array_key_exists("error", $settings)) {
@@ -33,7 +33,7 @@
 
                 foreach ($array as $key => $val) {
 
-                    if ($val === $BUDGET_ID) {
+                    if ($val === $budgetID) {
 
                         $budget_array_index = $array_index;
 
@@ -106,7 +106,7 @@
 
     }
 
-    function get_oldest_date($settings, $BUDGET_ID) {
+    function get_oldest_date($settings, $budgetID) {
 
         $oldest_date = $settings["first_month"];
         $oldest_parsed_date = strtotime($oldest_date);
@@ -114,7 +114,7 @@
 
     }
 
-    function get_recent_date($settings, $BUDGET_ID) {
+    function get_recent_date($settings, $budgetID) {
 
         $recent_date = $settings["last_month"];
         $recent_parsed_date = strtotime($recent_date);
@@ -195,7 +195,7 @@
 
         }
 
-        for ($i = 0; $i <= $max_category_strlen; $i++) {
+        for ($i = 0; $i <= $category_strlen; $i++) {
 
             echo "=";
 
@@ -205,9 +205,7 @@
 
         (float) $total_formatted = budget_format($total);
 
-        $max_amount_strlen = max($max_amount_strlen, strlen($total_formatted));
-
-#        (strlen($total_formatted) > $max_amount_strlen) ? $max_amount_strlen = strlen($total_formatted) : $max_amount_strlen = $max_amount_strlen; 
+        (strlen($total_formatted) > $max_amount_strlen) ? $max_amount_strlen = strlen($total_formatted) : $max_amount_strlen = $max_amount_strlen; 
 
         for ($i = 0; $i <= $max_amount_strlen; $i++) {
             
@@ -246,7 +244,6 @@
             echo $category_name . ":" . "\t" . $amount_formatted . "\n";
             $total += $amount;
 
-/*
             # Calculation for Max Length String of Amount
             $amount_strlen = strlen($amount_formatted);
             ($amount_strlen > $max_amount_strlen) ? $max_amount_strlen = $amount_strlen : $amount_strlen = $amount_strlen;
@@ -255,15 +252,9 @@
             $category_strlen = strlen($category_name);
             ($category_strlen > $max_category_strlen) ? $max_category_strlen = $category_strlen : $category_strlen = $category_strlen;
 
-*/
-
-# Track the maximum string lengths cleanly
-            $max_amount_strlen = max($max_amount_strlen, strlen($amount_formatted));
-            $max_category_strlen = max($max_category_strlen, strlen($category_name));
-
         }
 
-        for ($i = 0; $i <= $max_category_strlen; $i++) {
+        for ($i = 0; $i <= $category_strlen; $i++) {
 
             echo "=";
 
@@ -273,9 +264,7 @@
 
         (float) $total_formatted = $total;
 
-        $max_amount_strlen = max($max_amount_strlen, strlen($total_formatted));
-
-        #(strlen($total_formatted) > $max_amount_strlen) ? $max_amount_strlen = strlen($total_formatted) : $max_amount_strlen = $max_amount_strlen; 
+        (strlen($total_formatted) > $max_amount_strlen) ? $max_amount_strlen = strlen($total_formatted) : $max_amount_strlen = $max_amount_strlen; 
 
         for ($i = 0; $i <= $max_amount_strlen; $i++) {
             

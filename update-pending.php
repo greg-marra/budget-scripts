@@ -5,13 +5,12 @@
     require ($base_dir . $functions_directory);
 
     # Get latest date for budget in budget and set that in GET for category balances
-    $settings = get_settings($ch, $base ,$BUDGET_ID);
-    $oldest_budget_date = get_oldest_date($settings, $BUDGET_ID);
-    $newest_budget_date = get_recent_date($settings, $BUDGET_ID);
+    $settings = get_settings($ch, $base ,$budgetID);
+    $oldest_budget_date = get_oldest_date($settings, $budgetID);
+    $newest_budget_date = get_recent_date($settings, $budgetID);
 
     # Endpoint to grab all transactions for 'Credit Card Cash Rewards'
     $endpoint = "/$BUDGET_ID/transactions";
-
     curl_setopt($ch, CURLOPT_URL, $base . $endpoint);
 
     # Pending flag is orange

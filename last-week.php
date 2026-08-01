@@ -9,9 +9,9 @@
     $sub = 12;
 
     # Get latest date for budget in budget and set that in GET for category balances
-    $settings = get_settings($ch, $base ,$BUDGET_ID);
-    $oldest_budget_date = get_oldest_date($settings, $BUDGET_ID);
-    $recent_budget_date = get_recent_date($settings, $BUDGET_ID);
+    $settings = get_settings($ch, $base ,$budgetID);
+    $oldest_budget_date = get_oldest_date($settings, $budgetID);
+    $recent_budget_date = get_recent_date($settings, $budgetID);
 
     # Date 7 days ago
     $seven_day = new DateTime('7 days ago');
@@ -21,13 +21,6 @@
 
     # Endpoint to grab all transactions
     $endpoint = "/$BUDGET_ID/transactions";
-
-    if (!empty($oldest_budget_date)) {
-        $api_since_date = is_numeric($oldest_budget_date) ? date('Y-m-d', $oldest_budget_date) : $oldest_budget_date;
-        $endpoint .= "?since_date=" . urlencode($api_since_date);
-
-    }
-
     curl_setopt($ch, CURLOPT_URL, $base . $endpoint);
 
     $transactions = json_decode(curl_exec($ch), true);

@@ -6,18 +6,12 @@
     $report_name = "Networth Report";
 
     # Get latest date for budget in budget and set that in GET for category balances
-    $settings = get_settings($ch, $base ,$BUDGET_ID);
-    $oldest_budget_date = get_oldest_date($settings, $BUDGET_ID);
-    $newest_budget_date = get_recent_date($settings, $BUDGET_ID);
+    $settings = get_settings($ch, $base ,$budgetID);
+    $oldest_budget_date = get_oldest_date($settings, $budgetID);
+    $newest_budget_date = get_recent_date($settings, $budgetID);
 
     # Endpoint to grab list of category
     $endpoint = "/$BUDGET_ID/accounts";
-
-    if (!empty($oldest_budget_date)) {
-        $api_since_date = is_numeric($oldest_budget_date) ? date('Y-m-d', $oldest_budget_date) : $oldest_budget_date;
-        $endpoint .= "?since_date=" . urlencode($api_since_date);
-
-    }
 
     curl_setopt($ch, CURLOPT_URL, $base . $endpoint);
     $array = json_decode(curl_exec($ch), true);
