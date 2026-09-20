@@ -83,3 +83,4 @@
     }
 
     echo "\n" . "Total: $" . str_pad(substr($total, 0, 7), 7) . "\n";
+
