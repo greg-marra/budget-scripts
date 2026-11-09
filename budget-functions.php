@@ -1,6 +1,7 @@
 <?php
 
-    require ($base_dir . '/Documents/vars-budget.php');
+    $base_dir = $base_dir ?? ($_SERVER['HOME'] ?? getenv('HOME'));
+    require_once ($base_dir . '/Documents/vars-budget.php');
 
     # Initialize curl
     $ch = curl_init();
@@ -14,40 +15,34 @@
         )
     );
 
-    function get_settings($ch, $base, $budgetID) {
-
-        curl_setopt($ch, CURLOPT_URL, $base . "?include_accounts=true");# . "/" . $budgetID . "/settings");
-        $settings = json_decode(curl_exec($ch), true);
-        
-        if (is_array($settings) && array_key_exists("error", $settings)) {
-
-            echo "API Error:\n";
-            echo $settings["error"]["id"] . ": ";
-            echo $settings["error"]["name"] . "\n";
-            echo $settings["error"]["detail"] . "\n";
-            exit;
-
-        } else {
-
-            foreach ($settings["data"]["budgets"] as $array_index => $array) {
-
-                foreach ($array as $key => $val) {
-
-                    if ($val === $budgetID) {
-
-                        $budget_array_index = $array_index;
-
-                    }
-
-                }
-
-            }
-            
-            return $settings["data"]["budgets"]["$budget_array_index"];
-
-        }
-
+function get_settings($ch, $base, $budgetID) {
+    if (empty($budgetID)) {
+        throw new InvalidArgumentException("get_settings(): A valid budget ID must be provided.");
     }
+
+    curl_setopt($ch, CURLOPT_URL, $base . "?include_accounts=true");
+    $raw_response = curl_exec($ch);
+    $settings = json_decode($raw_response, true);
+
+    if (is_array($settings) && isset($settings["error"])) {
+        echo "API Error:\n";
+        echo ($settings["error"]["id"] ?? 'Unknown ID') . ": ";
+        echo ($settings["error"]["name"] ?? 'Unknown Error') . "\n";
+        echo ($settings["error"]["detail"] ?? 'No detail provided') . "\n";
+        exit(1);
+    }
+
+    if (!empty($settings["data"]["budgets"])) {
+        foreach ($settings["data"]["budgets"] as $budget) {
+            // YNAB budget objects have an 'id' attribute
+            if (isset($budget["id"]) && $budget["id"] === $budgetID) {
+                return $budget;
+            }
+        }
+    }
+
+    throw new RuntimeException("Budget ID '$budgetID' was not found in the YNAB response.");
+}
 
 
     function set_curl_put($data_json, $budget_TOKEN, $url) {
@@ -106,12 +101,11 @@
 
     }
 
-    function get_oldest_date($settings, $budgetID) {
+    function get_oldest_date($settings, $budgetID = null) {
 
-        $oldest_date = $settings["first_month"];
-        $oldest_parsed_date = strtotime($oldest_date);
-        return $oldest_parsed_date;
-
+        $oldest_date = $settings["first_month"] ?? null;
+        return $oldest_date ? strtotime($oldest_date) : 0;
+        
     }
 
     function get_recent_date($settings, $budgetID) {
@@ -203,7 +197,7 @@
 
         echo "\t";
 
-        (float) $total_formatted = budget_format($total);
+        $total_formatted = budget_format($total);
 
         (strlen($total_formatted) > $max_amount_strlen) ? $max_amount_strlen = strlen($total_formatted) : $max_amount_strlen = $max_amount_strlen; 
 
@@ -262,7 +256,7 @@
 
         echo "\t";
 
-        (float) $total_formatted = $total;
+        $total_formatted = (string) $total;
 
         (strlen($total_formatted) > $max_amount_strlen) ? $max_amount_strlen = strlen($total_formatted) : $max_amount_strlen = $max_amount_strlen; 
 

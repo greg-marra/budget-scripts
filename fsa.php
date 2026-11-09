@@ -3,14 +3,18 @@
     $filtered_year = 2026;
 
     $base_dir = $_SERVER['HOME'];
-    require ($base_dir . '/Documents/vars-budget.php');
-    require ($base_dir . $functions_directory);
-    $report_name = "fsa.csv";
+    require_once ($base_dir . '/Documents/vars-budget.php');
+    require_once ($base_dir . $functions_directory);
+    $output_file = "$base_dir/Documents/fsa-$filtered_year.csv";
+
+    if (file_exists($output_file)) {
+        unlink($output_file);
+    }
 
     # Get latest date for budget in budget and set that in GET for category balances
-    $settings = get_settings($ch, $base ,$budgetID);
-    $oldest_budget_date = get_oldest_date($settings, $budgetID);
-    $newest_budget_date = get_recent_date($settings, $budgetID);
+    $settings = get_settings($ch, $base ,$BUDGET_ID);
+    $oldest_budget_date = get_oldest_date($settings, $BUDGET_ID);
+    $newest_budget_date = get_recent_date($settings, $BUDGET_ID);
     
     $this_month = date('n');
     $this_year = date('Y');
@@ -22,15 +26,21 @@
     # Endpoint to grab all transactions for each Payee
     $endpoint = "/$BUDGET_ID/categories/$fsa_id/transactions";
     curl_setopt($ch, CURLOPT_URL, $base . $endpoint);
-    $result = json_decode(curl_exec($ch), true);
+    $raw_json = curl_exec($ch);
+    $result = json_decode($raw_json, true);
+
+    if (!isset($result["data"]["transactions"])) {
+        $detail = $result["error"]["detail"] ?? "No transaction data returned from API.";
+        fwrite(STDERR, "YNAB API Error: $detail\n");
+        exit(1);
+    }
 
     foreach ( $result["data"]["transactions"] as $transaction) {
 
         $date = date_parse_from_format("Y-m-d",$transaction["date"]);
         $year = $date["year"];
 
-        if ($filtered_year === $year && $transaction["payee_id"] != "481086e4-00b4-43fe-ad13-44b59b05c3e9" /*Transfer*/) {
-
+        if ($filtered_year === $year && ($transaction["payee_id"] ?? '') !== $TRANSFER_PAYEE_ID) {          
             $month = $date["month"];
             $day = $date["day"];
             $amount = -($transaction["amount"] / 1000);
@@ -52,19 +62,21 @@
             $total += $amount;
 
             echo
-            "$" . str_pad(substr($amount, 0, 7), 7) .
+            "$" . str_pad(number_format($amount, 2), 8) .
             " -\t" . str_pad(substr($payee, 0, 20), 20) .
             " -\t" . str_pad(substr($notes, 0, 20), 20) .
             "\n";
 
-            file_put_contents(
-                "$base_dir/Documents/fsa-$year.csv",
-                "$year-$month-$day,$payee,$amount,$notes\n",
-                FILE_APPEND | LOCK_EX
-            );
+            $csv_payee = '"' . str_replace('"', '""', $payee) . '"';
+            $csv_notes = '"' . str_replace('"', '""', $notes) . '"';
+            $csv_row = "$year-$month-$day,$csv_payee," . number_format($amount, 2, '.', '') . ",$csv_notes\n";
+
+            file_put_contents($output_file, $csv_row, FILE_APPEND | LOCK_EX);
 
         }
 
     }
 
-    echo "\n" . "Total: $$total" . "\n" . "File at: " . "$base_dir/Documents/fsa-$year.csv" . "\n";
+$formatted_total = number_format($total, 2);
+echo "\nTotal: $$formatted_total\n";
+echo "File at: $output_file\n";
